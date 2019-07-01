@@ -44,12 +44,12 @@ function prepare_magento_temp() {
     ln -snvf "$DST" "$SRC"
 }
 
-function prepare_temps() {
-    VOLUME /var/www/html/var/cache
-    VOLUME /var/www/html/var/log
-    VOLUME /var/www/html/var/tmp
-    VOLUME /var/www/html/generated
-    VOLUME /var/www/html/dev/tests/integration/tmp
+function prepare_magento_temps() {
+    prepare_magento_temp /var/cache
+    prepare_magento_temp /var/log
+    prepare_magento_temp /var/tmp
+    prepare_magento_temp /generated
+    prepare_magento_temp /dev/tests/integration/tmp
 }
 
 function clean() {
@@ -70,7 +70,7 @@ function run_integration() {
 }
 
 prepare_mysql
-prepare_magento_temp
+prepare_magento_temps
 
 run_unit
 run_integration

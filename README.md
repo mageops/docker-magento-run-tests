@@ -2,6 +2,12 @@
 
 _Note: The `exec` mount opt on `/tmp` is needed for elasticsearch because it maps mem to temp files._
 
+## Software
+
+For now the `master` branch uses MySQL 5.6, Elasticsearch 6 and PHP 7.2.
+
+Other versions will be avaialble on appropriately named branches / docker tags.
+
 ## Basic usage
 
 ```bash
@@ -12,17 +18,20 @@ docker run \
     --tmpfs /var/lib/elasticsearch \
     --tmpfs /tmp:rw,exec \
     --volume "$(pwd):/var/www/html" \
-    --user "$(id -u):$(id -g)" \
     "magesuite/build:latest"
     
 # Then later execute your test suite
-docker exec --tty mgs-test /usr/bin/mgs-run-tests ci creativestyle
+docker exec \
+    --tty \
+    --user "$(id -u):$(id -g)" \
+    mgs-test \
+    /usr/bin/mgs-run-tests ci creativestyle
 ```
 
 During the testing you can get into the bash shell to poke around:
 
 ```bash
-docker exec --tty --interactive mgs-test /bin/bash
+docker exec -it mgs-test /bin/bash
 ```
 
 ## Run everthing at once
