@@ -21,6 +21,7 @@ fi
 if [[ ! -z "$CHANGE_UID" ]] && [[ ! -z "$CHANGE_GID" ]] ; then
     echo "Starting sudo subshell with UID:$CHANGE_UID GID:$CHANGE_GID..."
     sudo -E -u "$CHANGE_UID" -g "$CHANGE_GID" $0 "$ENVNAME" "$TESTSUITE"
+    exit 0
 fi
 
 set -e
