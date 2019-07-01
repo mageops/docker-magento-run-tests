@@ -18,7 +18,7 @@ docker run \
     --tmpfs /var/lib/elasticsearch \
     --tmpfs /tmp:rw,exec \
     --volume "$(pwd):/var/www/html" \
-    "magesuite/build:latest"
+    "magesuite/run-tests:stable"
     
 # Then later execute your test suite
 docker exec \
@@ -46,7 +46,7 @@ docker run \
     --tmpfs /var/lib/elasticsearch \
     --tmpfs /tmp:rw,exec \
     --volume "$(pwd):/var/www/html" \
-    "magesuite/build:latest" \
+    "magesuite/run-tests:stable" \
     "/usr/bin/elasticsearch-server" \
     "/usr/bin/mysql-server" \
     "/usr/bin/mgs-run-tests ci creativestyle $(id -u) $(id -g)"
@@ -62,7 +62,7 @@ docker run \
     --tmpfs /var/lib/elasticsearch \
     --tmpfs /tmp:rw,exec \
     --volume "$(pwd):/var/www/html" \
-    "magesuite/build:latest" \
+    "magesuite/run-tests:stable" \
     "/bin/bash"
 ```
 
