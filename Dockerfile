@@ -1,5 +1,11 @@
 FROM centos:centos7
 
+ENV ES_JAVA_OPTS="-Xms128m -Xmx128m"
+ENV DB_USER="creativestyle"
+ENV DB_PASS="brightSideOfLife"
+ENV DB_NAME="magento2_integration_tests"
+ENV COMPOSER_HOME="/opt/composer"
+
 RUN ln -svf /usr/share/zoneinfo/UTC /etc/localtime \
  && yum -y update \
  && yum -y reinstall glibc-common \
@@ -26,6 +32,7 @@ RUN ln -svf /usr/share/zoneinfo/UTC /etc/localtime \
  && /usr/share/elasticsearch/bin/elasticsearch-plugin install analysis-icu \
  && mkdir -p /var/log/elasticsearch \
  && chown elasticsearch:elasticsearch /var/log/elasticsearch \
+ && mkdir /opt/composer \
  && curl getcomposer.org/installer -o /tmp/composer-setup \
  && php -r "if (hash_file('sha384', '/tmp/composer-setup') !== '48e3236262b34d30969dca3c37281b3b4bbe3221bda826ac6a9a62d6444cdb0dcd0615698a5cbe587c3f0fe57a54d8f5') { exit(1); }" \
  && php /tmp/composer-setup --install-dir=/usr/bin --filename=composer \
@@ -42,11 +49,6 @@ RUN ln -svf /usr/share/zoneinfo/UTC /etc/localtime \
  && chmod +x /usr/bin/{elasticsearch-server,mysql-server,healthcheck}
 
 COPY mgs-run-tests /usr/bin/mgs-run-tests
-
-ENV ES_JAVA_OPTS="-Xms128m -Xmx128m"
-ENV DB_USER="creativestyle"
-ENV DB_PASS="brightSideOfLife"
-ENV DB_NAME="magento2_integration_tests"
 
 VOLUME /tmp
 VOLUME /var/lib/mysql
