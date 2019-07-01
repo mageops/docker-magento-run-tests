@@ -7,9 +7,9 @@ CHANGE_GID="$4"
 
 echo "$@"
 
-# Docker has the healthcheck built in but just in case lets make sure...
+# Docker has the healthcheck built in but in case we run it as a service we need to wait
 until /usr/bin/healthcheck ; do
-    sleep 1s
+    sleep 2s
     echo "Waiting for services to come up..."
 done
 
@@ -20,10 +20,10 @@ fi
 
 if [[ ! -z "$CHANGE_UID" ]] && [[ ! -z "$CHANGE_GID" ]] ; then
     echo "Starting sudo subshell with UID:$CHANGE_UID GID:$CHANGE_GID..."
-    sudo -u "$CHANGE_UID" -g "$CHANGE_GID" $0 "$ENVNAME" "$TESTSUITE"
+    sudo -E -u "$CHANGE_UID" -g "$CHANGE_GID" $0 "$ENVNAME" "$TESTSUITE"
 fi
 
-set -e -x
+set -e
 
 function prepare_mysql() {
     mysqlshow magento2_integration_tests 2>&1 > /dev/null && return 0
@@ -37,7 +37,7 @@ function prepare_magento_temp() {
     SRC="/var/www/html$REL"
     DST="/tmp$SRC"
 
-    [[ "$(readlink -f "$SRC")" != "$SRC" ]] && return 0 || true
+    [[ "$(readlink -f "$SRC")" != "$DST" ]] && return 0 || true
 
     rm -rf "$SRC"
     mkdir -p "$DST"
@@ -70,6 +70,9 @@ function run_integration() {
 }
 
 prepare_mysql
+
+# Mount temps in /tmp which should be mounted as tmpfs to improve perf
+# and avoid polluting the host filesystem...
 prepare_magento_temps
 
 run_unit

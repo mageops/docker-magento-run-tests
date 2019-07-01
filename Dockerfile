@@ -57,4 +57,4 @@ ENTRYPOINT ["/sbin/multirun"]
 
 CMD ["/usr/bin/elasticsearch-server", "/usr/bin/mysql-server"]
 
-HEALTHCHECK --timeout=5s --interval=10s --start-period=5s CMD /usr/bin/healthcheck
+HEALTHCHECK --timeout=10s --interval=10s --start-period=10s CMD /usr/bin/healthcheck
