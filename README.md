@@ -1,4 +1,4 @@
-# MagesSuite Docker Container For Running Magento Tests
+# MageSuite Docker Container For Running Magento Tests
 
 _Note: The `exec` mount opt on `/tmp` is needed for elasticsearch because it maps mem to temp files._
 
@@ -7,16 +7,16 @@ _Note: The `exec` mount opt on `/tmp` is needed for elasticsearch because it map
 ```bash
 # Start the container with all services
 docker run \
+    --name mgs-test \
     --tmpfs /var/lib/mysql \
     --tmpfs /var/lib/elasticsearch \
     --tmpfs /tmp:rw,exec \
-    --volume $(pwd):/var/www/html \
-    --user $(id -u):$(id -g) \
-    --name mgs-test \
-    magesuite/build:latest
+    --volume "$(pwd):/var/www/html" \
+    --user "$(id -u):$(id -g)" \
+    "magesuite/build:latest"
     
 # Then later execute your test suite
-docker exec --tty mgs-test /usr/bin/mgs-run-tests
+docker exec --tty mgs-test /usr/bin/mgs-run-tests ci creativestyle
 ```
 
 During the testing you can get into the bash shell to poke around:
@@ -36,27 +36,25 @@ docker run \
     --tmpfs /var/lib/mysql \
     --tmpfs /var/lib/elasticsearch \
     --tmpfs /tmp:rw,exec \
-    --volume $(pwd):/var/www/html \
-    --user $(id -u):$(id -g) \
-    magesuite/build:latest \
+    --volume "$(pwd):/var/www/html" \
+    "magesuite/build:latest" \
     "/usr/bin/elasticsearch-server" \
     "/usr/bin/mysql-server" \
-    "/usr/bin/mgs-run-tests"
+    "/usr/bin/mgs-run-tests ci creativestyle $(id -u) $(id -g)"
 ```
 
 ## Run a bash shell without starting any services
 
 ```bash
 docker run \
+    --tty \
+    --interactive \
     --tmpfs /var/lib/mysql \
     --tmpfs /var/lib/elasticsearch \
     --tmpfs /tmp:rw,exec \
-    --volume $(pwd):/var/www/html \
-    --user $(id -u):$(id -g) \
-    --interactive \
-    --tty \
-    magesuite/build:latest \
-    /bin/bash
+    --volume "$(pwd):/var/www/html" \
+    "magesuite/build:latest" \
+    "/bin/bash"
 ```
 
 You can start the services while inside by doing:

@@ -2,6 +2,10 @@
 
 ENVNAME="$1"
 TESTSUITE="$2"
+CHANGE_UID="$3"
+CHANGE_GID="$4"
+
+echo "$@"
 
 # Docker has the healthcheck built in but just in case lets make sure...
 until /usr/bin/healthcheck ; do
@@ -9,9 +13,14 @@ until /usr/bin/healthcheck ; do
     echo "Waiting for services to come up..."
 done
 
-if [[ $# -ne 2 ]] ; then
-    echo "Usage: $0 [env] [testsuite]"
+if [[ $# -ne 2 ]] && [[ $# -ne 4 ]]; then
+    echo "Usage: $0 [env] [testsuite] <uid> <gid>"
     exit 20
+fi
+
+if [[ ! -z "$CHANGE_UID" ]] && [[ ! -z "$CHANGE_GID" ]] ; then
+    echo "Starting sudo subshell with UID:$CHANGE_UID GID:$CHANGE_GID..."
+    sudo -u "$CHANGE_UID" -g "$CHANGE_GID" $0 "$ENVNAME" "$TESTSUITE"
 fi
 
 set -e -x
@@ -41,7 +50,6 @@ function prepare_temps() {
     VOLUME /var/www/html/var/tmp
     VOLUME /var/www/html/generated
     VOLUME /var/www/html/dev/tests/integration/tmp
-
 }
 
 function clean() {

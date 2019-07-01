@@ -37,7 +37,7 @@ RUN ln -svf /usr/share/zoneinfo/UTC /etc/localtime \
    && chmod +x /sbin/multirun \
    && echo -e "#!/bin/bash \n set -e -x \n chown elasticsearch:elasticsearch /var/lib/elasticsearch && chmod ugo+rwx /tmp \n sudo -E -u elasticsearch -g elasticsearch /usr/share/elasticsearch/bin/elasticsearch" >> /usr/bin/elasticsearch-server \
    && echo -e "#!/bin/bash \n set -e -x \n chown mysql:mysql /var/lib/mysql && chmod ugo+rwx /tmp \n sudo -E -u mysql -g mysql /usr/libexec/mariadb-prepare-db-dir \n sudo -u mysql -g mysql /usr/bin/mysqld_safe --basedir=/usr" > /usr/bin/mysql-server \
-   && echo -e "#!/bin/bash \n set -e -x \n curl -f localhost:9200 && mysqladmin ping" > /usr/bin/healthcheck \
+   && echo -e "#!/bin/bash \n set -e -x \n curl -f localhost:9200 2>&1 > /dev/null && mysqladmin ping 2>&1 > /dev/null" > /usr/bin/healthcheck \
    && chmod +x /usr/bin/{elasticsearch-server,mysql-server,healthcheck} \
    && mkdir -p /var/www/html
 
