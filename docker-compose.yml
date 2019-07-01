@@ -1,0 +1,38 @@
+version: "2.3"
+services:
+  tests:
+    image: magesuite/run-tests:stable
+    environment:
+      - DB_USER=creativestyle
+      - DB_PASS=brightSideOfLife
+      - DB_NAME=magento2_integration_tests
+    volumes:
+      - type: bind
+        source: '${PWD}'
+        target: /var/www/html
+      - type: tmpfs
+        target: /tmp:rw,exec
+        volume:
+          nocopy: true
+      - type: tmpfs
+        target: /var/lib/elasticsearch
+        volume:
+          nocopy: true
+      - type: tmpfs
+        target: /var/lib/mysql
+        volume:
+          nocopy: true
+      - type: tmpfs
+        target: /var/www/html/generated
+        volume:
+          nocopy: true
+      - type: tmpfs
+        target: /var/www/html/var
+        volume:
+          nocopy: true
+      - type: tmpfs
+        target: /dev/tests/integration/tmp
+        volume:
+          nocopy: true
+
+

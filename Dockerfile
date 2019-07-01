@@ -44,6 +44,9 @@ RUN ln -svf /usr/share/zoneinfo/UTC /etc/localtime \
 COPY mgs-run-tests /usr/bin/mgs-run-tests
 
 ENV ES_JAVA_OPTS="-Xms128m -Xmx128m"
+ENV DB_USER="creativestyle"
+ENV DB_PASS="brightSideOfLife"
+ENV DB_NAME="magento2_integration_tests"
 
 VOLUME /tmp
 VOLUME /var/lib/mysql

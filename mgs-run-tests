@@ -7,7 +7,6 @@ CHANGE_GID="$4"
 
 echo "$@"
 
-# Docker has the healthcheck built in but in case we run it as a service we need to wait
 until /usr/bin/healthcheck ; do
     sleep 2s
     echo "Waiting for services to come up..."
@@ -27,30 +26,11 @@ fi
 set -e
 
 function prepare_mysql() {
-    mysqlshow magento2_integration_tests 2>&1 > /dev/null && return 0
-    mysql -uroot -h127.0.0.1 -e "CREATE USER 'creativestyle'@'%' IDENTIFIED BY 'brightSideOfLife'"
-    mysql -uroot -h127.0.0.1 -e "GRANT ALL PRIVILEGES ON *.* TO 'creativestyle'@'%' WITH GRANT OPTION"
-    mysql -uroot -h127.0.0.1 -e "CREATE DATABASE magento2_integration_tests"
-}
+    mysqlshow "$DB_NAME" 2>&1 > /dev/null && return 0
 
-function prepare_magento_temp() {
-    REL="$1"
-    SRC="/var/www/html$REL"
-    DST="/tmp$SRC"
-
-    [[ "$(readlink -f "$SRC")" != "$DST" ]] && return 0 || true
-
-    rm -rf "$SRC"
-    mkdir -p "$DST"
-    ln -snvf "$DST" "$SRC"
-}
-
-function prepare_magento_temps() {
-    prepare_magento_temp /var/cache
-    prepare_magento_temp /var/log
-    prepare_magento_temp /var/tmp
-    prepare_magento_temp /generated
-    prepare_magento_temp /dev/tests/integration/tmp
+    mysql -uroot -h127.0.0.1 -e "CREATE USER '${DB_USER}'@'%' IDENTIFIED BY '${DB_PASS}'"
+    mysql -uroot -h127.0.0.1 -e "GRANT ALL PRIVILEGES ON *.* TO '${DB_USER}'@'%' WITH GRANT OPTION"
+    mysql -uroot -h127.0.0.1 -e "CREATE DATABASE '${DB_NAME}'"
 }
 
 function clean() {
@@ -71,10 +51,6 @@ function run_integration() {
 }
 
 prepare_mysql
-
-# Mount temps in /tmp which should be mounted as tmpfs to improve perf
-# and avoid polluting the host filesystem...
-prepare_magento_temps
 
 run_unit
 run_integration
