@@ -11,6 +11,8 @@ For now the `master` branch uses MySQL 5.6, Elasticsearch 6 and PHP 7.2.
 
 Other versions will be avaialble on appropriately named branches / docker tags.
 
+The image is big and there's not really a way around it since it has a lot of software and is based on CentOS (which we use for local dev / production deployments, so we want to keep everything else close).
+
 ## Basic usage
 
 ```bash
