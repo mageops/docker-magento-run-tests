@@ -15,7 +15,8 @@ RUN ln -svf /usr/share/zoneinfo/UTC /etc/localtime \
            iproute python-setuptools hostname inotify-tools which \
            openssh-server openssh-clients \
            python-setuptools \
-           mariadb-server mariadb-client \
+ && yum -y install http://repo.mysql.com/mysql57-community-release-el7-9.noarch.rpm \
+ && yum -y install mysql-server mysql-client \
  && rpm --import https://rpms.remirepo.net/RPM-GPG-KEY-remi \
  && yum -y install https://rpms.remirepo.net/enterprise/remi-release-7.rpm \
  && yum-config-manager --enable remi-php72 \
@@ -43,8 +44,8 @@ RUN ln -svf /usr/share/zoneinfo/UTC /etc/localtime \
  && curl -L https://github.com/nicolas-van/multirun/releases/download/0.3.2/multirun-glibc-0.3.2.tar.gz | tar -xz -C /sbin \
  && chmod +x /sbin/multirun \
  && mkdir -p /var/www/html \
- && echo -e "#!/bin/bash \n set -e -x \n chown elasticsearch:elasticsearch /var/lib/elasticsearch && chmod ugo+rwx /tmp \n sudo -E -u elasticsearch -g elasticsearch /usr/share/elasticsearch/bin/elasticsearch" >> /usr/bin/elasticsearch-server \
- && echo -e "#!/bin/bash \n set -e -x \n chown mysql:mysql /var/lib/mysql && chmod ugo+rwx /tmp \n sudo -E -u mysql -g mysql /usr/libexec/mariadb-prepare-db-dir \n sudo -u mysql -g mysql /usr/bin/mysqld_safe --basedir=/usr" > /usr/bin/mysql-server \
+ && echo -e "#!/bin/bash \n set -e -x \n chown elasticsearch:elasticsearch /var/lib/elasticsearch && chmod ugo+rwx /tmp \n sudo -E -u elasticsearch -g elasticsearch /usr/share/elasticsearch/bin/elasticsearch" > /usr/bin/elasticsearch-server \
+ && echo -e "#!/bin/bash \n set -e -x \n chown mysql:mysql /var/lib/mysql && chmod ugo+rwx /tmp \n mysqld --initialize-insecure --user=mysql --datadir=/var/lib/mysql \n sudo -E -u mysql -g mysql /usr/sbin/mysqld" > /usr/bin/mysql-server \
  && echo -e "#!/bin/bash \n set -e -x \n curl -sf localhost:9200 2>&1 > /dev/null && mysqladmin ping 2>&1 > /dev/null" > /usr/bin/healthcheck \
  && chmod +x /usr/bin/{elasticsearch-server,mysql-server,healthcheck}
 

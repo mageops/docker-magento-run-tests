@@ -7,7 +7,7 @@ _Note: The `exec` mount opt on `/tmp` is needed for elasticsearch because it map
 
 ## Software
 
-For now the `master` branch uses MySQL 5.6, Elasticsearch 6 and PHP 7.2.
+For now the `master` branch uses MySQL 5.7, Elasticsearch 6 and PHP 7.2.
 
 Other versions will be avaialble on appropriately named branches / docker tags.
 
@@ -48,6 +48,8 @@ docker exec -it mgs-test /bin/bash
 ```
 
 ## Run everthing at once
+
+**Warning: The approach with switching to arbitrary UID/GID via sudo doesn't work everywhere, workaround is being prepared.**
 
 As an alternative you could run everything at once as the 
 tests will wait for healthcheck to become green before proceeding:
