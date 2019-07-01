@@ -18,12 +18,17 @@ The image is big and there's not really a way around it since it has a lot of so
 ```bash
 # Start the container with all services
 docker run \
+    --rm \
+    --detach \
     --name mgs-test \
     --tmpfs /var/lib/mysql \
     --tmpfs /var/lib/elasticsearch \
     --tmpfs /tmp:rw,exec \
     --volume "$(pwd):/var/www/html" \
     "magesuite/run-tests:stable"
+
+# Wait until healthcheck is green
+while [[ "$(docker inspect --format='{{json .State.Health.Status}}' mgs-test)" == '"starting"' ]] ; do sleep 1s && echo "Waiting for start"; done
     
 # Then later execute your test suite
 docker exec \
