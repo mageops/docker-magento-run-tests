@@ -1,0 +1,68 @@
+#!/bin/bash
+
+ENVNAME="$1"
+TESTSUITE="$2"
+
+# Docker has the healthcheck built in but just in case lets make sure...
+until /usr/bin/healthcheck ; do
+    sleep 1s
+    echo "Waiting for services to come up..."
+done
+
+if [[ $# -ne 2 ]] ; then
+    echo "Usage: $0 [env] [testsuite]"
+    exit 20
+fi
+
+set -e -x
+
+function prepare_mysql() {
+    mysqlshow magento2_integration_tests 2>&1 > /dev/null && return 0
+    mysql -uroot -h127.0.0.1 -e "CREATE USER 'creativestyle'@'%' IDENTIFIED BY 'brightSideOfLife'"
+    mysql -uroot -h127.0.0.1 -e "GRANT ALL PRIVILEGES ON *.* TO 'creativestyle'@'%' WITH GRANT OPTION"
+    mysql -uroot -h127.0.0.1 -e "CREATE DATABASE magento2_integration_tests"
+}
+
+function prepare_magento_temp() {
+    REL="$1"
+    SRC="/var/www/html$REL"
+    DST="/tmp$SRC"
+
+    [[ "$(readlink -f "$SRC")" != "$SRC" ]] && return 0 || true
+
+    rm -rf "$SRC"
+    mkdir -p "$DST"
+    ln -snvf "$DST" "$SRC"
+}
+
+function prepare_temps() {
+    VOLUME /var/www/html/var/cache
+    VOLUME /var/www/html/var/log
+    VOLUME /var/www/html/var/tmp
+    VOLUME /var/www/html/generated
+    VOLUME /var/www/html/dev/tests/integration/tmp
+
+}
+
+function clean() {
+    rm -rf \
+        /var/www/html/generated/* \
+        /var/www/html/var/cache/* \
+        /var/www/html/dev/tests/integration/tmp/*
+}
+
+function run_unit() {
+    clean
+    phing tests:unit -Denvname=${ENVNAME} -Dtestsuite=${TESTSUITE}
+}
+
+function run_integration() {
+    clean
+    phing tests:unit -Denvname=${ENVNAME} -Dtestsuite=${TESTSUITE}
+}
+
+prepare_mysql
+prepare_magento_temp
+
+run_unit
+run_integration
