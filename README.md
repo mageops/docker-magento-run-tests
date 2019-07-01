@@ -1,5 +1,8 @@
 # MageSuite Docker Container For Running Magento Tests
 
+[![](https://images.microbadger.com/badges/image/magesuite/run-tests:stable.svg)](https://microbadger.com/images/magesuite/run-tests:stable "Docker Image Badge") [![](https://images.microbadger.com/badges/version/magesuite/run-tests:stable.svg)](https://microbadger.com/images/magesuite/run-tests:stable "Docker Image Version Badge")
+[![](https://images.microbadger.com/badges/commit/magesuite/run-tests.svg)](https://microbadger.com/images/magesuite/run-tests "Docker Image Commit Badge")
+
 _Note: The `exec` mount opt on `/tmp` is needed for elasticsearch because it maps mem to temp files._
 
 ## Software
