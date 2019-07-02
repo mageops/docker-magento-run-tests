@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -x
+
 . hooks/variants
 
 build_main

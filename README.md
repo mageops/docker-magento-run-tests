@@ -107,8 +107,11 @@ docker run \
     --tty \
     --interactive \
     --tmpfs /tmp:rw,exec,mode=1777 \
-    --tmpfs /var/lib/mysql:rw,mode=777  \
+    --tmpfs /var/lib/mysql:rw,mode=777 \
     --tmpfs /var/lib/elasticsearch:rw,mode=777 \
+    --tmpfs /var/www/html/generated:rw,mode=777 \
+    --tmpfs /var/www/html/var:rw,mode=777 \
+    --tmpfs /var/www/html/dev/tests/integration/tmp:rw,mode=777 \
     --volume "$(pwd):/var/www/html" \
     "magesuite/run-tests:stable" \
     "/bin/bash"
