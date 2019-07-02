@@ -5,6 +5,7 @@ ARG ELASTICSEARCH_VERSION="6.8.1"
 
 ENV PHP_VERSION="${PHP_VERSION}"
 ENV ELASTICSEARCH_VERSION="${ELASTICSEARCH_VERSION}"
+ENV COMPOSER_HOME="/opt/composer"
 
 RUN ln -svf /usr/share/zoneinfo/UTC /etc/localtime \
  && yum -y update \
@@ -59,10 +60,11 @@ RUN rpm --import https://yum.mariadb.org/RPM-GPG-KEY-MariaDB \
 COPY mgs-run-tests /usr/bin/mgs-run-tests
 
 ENV ES_JAVA_OPTS="-Xms128m -Xmx128m"
+
 ENV DB_USER="magento2"
 ENV DB_PASS="magento2"
 ENV DB_NAME="magento2_integration_tests"
-ENV COMPOSER_HOME="/opt/composer"
+
 
 VOLUME /var/lib/mysql
 VOLUME /var/lib/elasticsearch
