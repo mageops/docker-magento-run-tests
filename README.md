@@ -59,11 +59,26 @@ docker run \
     --tmpfs /var/www/html/dev/tests/integration/tmp:rw,mode=777 \
     --volume "$(pwd):/var/www/html" \
     "magesuite/run-tests:php72-es6-mariadb102-stable"
+```
 
-# Wait until healthcheck is green
+### Wait until healthcheck is green
+
+```bash
 while [[ "$(docker inspect --format='{{json .State.Health.Status}}' mgs-test)" == '"starting"' ]] ; do sleep 1s && echo "Waiting for start"; done
+```
     
-# Then later execute your test suite
+### Then later execute your test suite
+
+```bash
+docker exec \
+    --tty \
+    mgs-test \
+    /usr/bin/mgs-run-tests ci creativestyle "$(id -u)" "$(id -g)"
+```
+
+** Alternatively if the internal UID/GID switch doesn't work for you for some reason you can try switching the docker UID/GID:**
+
+```bash
 docker exec \
     --tty \
     --user "$(id -u):$(id -g)" \
@@ -78,8 +93,6 @@ docker exec -it mgs-test /bin/bash
 ```
 
 ## Run everthing at once
-
-**Warning: The approach with switching to arbitrary UID/GID via sudo doesn't work everywhere, workaround is being prepared.**
 
 As an alternative you could run everything at once as the 
 tests will wait for healthcheck to become green before proceeding:
