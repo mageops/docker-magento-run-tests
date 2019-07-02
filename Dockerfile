@@ -64,8 +64,8 @@ ENV ES_JAVA_OPTS="-Xms128m -Xmx128m" \
     DB_PASS="magento2" \
     DB_NAME="magento2_integration_tests"
 
-VOLUME /var/lib/mysql \
-       /var/lib/elasticsearch \
+VOLUME /var/lib/mysql/ \
+       /var/lib/elasticsearch/ \
        /var/www/html/generated/ \
        /var/www/html/var/ \
        /var/www/html/dev/tests/integration/tmp/
