@@ -18,8 +18,16 @@ if [[ $# -ne 2 ]] && [[ $# -ne 4 ]]; then
 fi
 
 if [[ ! -z "$CHANGE_UID" ]] && [[ ! -z "$CHANGE_GID" ]] ; then
+    if [[ $EUID -ne 0 ]]; then
+        echo "Switching UID/GID is only possible from root user!" >&2
+        exit 2
+    fi
+
     echo "Starting sudo subshell with UID:$CHANGE_UID GID:$CHANGE_GID..."
-    sudo -E -u "$CHANGE_UID" -g "$CHANGE_GID" $0 "$ENVNAME" "$TESTSUITE"
+
+    mgs-fix-perms
+    mgs-switch-uid-gid "$CHANGE_UID" "$CHANGE_GID" $0 "$ENVNAME" "$TESTSUITE"
+
     exit 0
 fi
 

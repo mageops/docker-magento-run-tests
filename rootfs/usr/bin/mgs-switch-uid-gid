@@ -1,0 +1,27 @@
+#!/bin/bash
+
+set -e
+
+USER_NAME="magento"
+GROUP_NAME="magento"
+
+NEW_UID="$1"
+NEW_GID="$2"
+
+shift 2
+
+if grep -q "$GROUP_NAME:" /etc/group ; then
+    groupmod --non-unique --gid "$NEW_GID" "$GROUP_NAME"
+else
+    groupadd --non-unique --gid "$NEW_GID" "$GROUP_NAME"
+fi
+
+if id "$USER_NAME" >/dev/null 2>&1; then
+    usermod --gid "$NEW_GID" --shell /bin/bash --uid "$NEW_UID" --non-unique "$USER_NAME"
+else
+    adduser --gid "$NEW_GID" --shell /bin/bash --uid "$NEW_UID" --non-unique "$USER_NAME"
+fi
+
+if [[ $# -gt 0 ]] ; then
+    sudo -E -u "$USER_NAME" -g "$GROUP_NAME" -- $@
+fi
