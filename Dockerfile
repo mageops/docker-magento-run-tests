@@ -1,10 +1,18 @@
 FROM centos:centos7
 
+ARG PHP_VERSION="72"
+ARG ELASTICSEARCH_VERSION="6.8.1"
+ARG MYSQL_VERSION="57"
+
 ENV ES_JAVA_OPTS="-Xms128m -Xmx128m"
 ENV DB_USER="creativestyle"
 ENV DB_PASS="brightSideOfLife"
 ENV DB_NAME="magento2_integration_tests"
 ENV COMPOSER_HOME="/opt/composer"
+
+ENV PHP_VERSION="${PHP_VERSION}"
+ENV ELASTICSEARCH_VERSION="${ELASTICSEARCH_VERSION}"
+ENV MYSQL_VERSION="${MYSQL_VERSION}"
 
 RUN ln -svf /usr/share/zoneinfo/UTC /etc/localtime \
  && yum -y update \
@@ -15,11 +23,11 @@ RUN ln -svf /usr/share/zoneinfo/UTC /etc/localtime \
            iproute python-setuptools hostname inotify-tools which \
            openssh-server openssh-clients \
            python-setuptools \
- && yum -y install http://repo.mysql.com/mysql57-community-release-el7-9.noarch.rpm \
+ && yum -y install https://repo.mysql.com/mysql${MYSQL_VERSION}-community-release-el7.rpm \
  && yum -y install mysql-server mysql-client \
  && rpm --import https://rpms.remirepo.net/RPM-GPG-KEY-remi \
  && yum -y install https://rpms.remirepo.net/enterprise/remi-release-7.rpm \
- && yum-config-manager --enable remi-php72 \
+ && yum-config-manager --enable "remi-php${PHP_VERSION}" \
  && yum -y install \
            php php-devel php-gd php-pdo \
            php-soap php-xmlrpc php-xml php-intl php-mcrypt \
@@ -28,7 +36,7 @@ RUN ln -svf /usr/share/zoneinfo/UTC /etc/localtime \
  && rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch \
  && yum -y install \
            java-1.8.0-openjdk.x86_64 \
-           https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.8.1.rpm \
+           "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-${ELASTICSEARCH_VERSION}.rpm" \
  && /usr/share/elasticsearch/bin/elasticsearch-plugin install analysis-phonetic \
  && /usr/share/elasticsearch/bin/elasticsearch-plugin install analysis-icu \
  && mkdir -p /var/log/elasticsearch \
