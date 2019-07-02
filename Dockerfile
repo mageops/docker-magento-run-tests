@@ -60,7 +60,7 @@ RUN rpm --import https://yum.mariadb.org/RPM-GPG-KEY-MariaDB \
 COPY /rootfs /
 
 RUN chmod 440 /etc/sudoers \
-    chmod 550 /usr/bin/*
+    && chmod 550 /usr/bin/*
 
 ENV ES_JAVA_OPTS="-Xms128m -Xmx128m" \
     DB_USER="magento2" \
