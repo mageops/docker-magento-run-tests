@@ -18,37 +18,28 @@ See [all tags on Docker Hub](https://hub.docker.com/r/magesuite/run-tests/tags).
 ## Tag suffixes
 
 - `-latest` - built from branch tip
-- `-mysql` (or generally `-{branch}`) - built from branch tip
-- `-stable` - built from tags named `v1.X` or `v1.X-mysql` (used to tag `mysql` branch commits)
+- `-stable` - built from tags named `vX.Y`
 
 ## Plain tags
 
 - `latest` - master branch tip
-- `stable` - latest tag named `v1.X` or `v1.X-mysql`
-- `{branch}` - tip of `{branch}`
+- `stable` - latest tag named `vX.Y` 
 
 ## Notable versions 
 
-| Version                   | Docker tag                    | Branch        | PHP   | DB            | Elasticsearch |
-| ------------------------- | ----------------------------- | :-----------: | ----: | ------------: | ------------: |
-| **php71-es5-mariadb100**  | _php71-es5-mariadb100-stable_ | master        | 7.1.X | MariaDB 10.0  | 5.X           |
-| **php71-es6-mariadb101**  | _php71-es6-mariadb101-stable_ | master        | 7.1.X | MariaDB 10.1  | 6.X           | 
-| **php72-es6-mariadb101**  | _php72-es6-mariadb101-stable_ | master        | 7.3.X | MariaDB 10.1  | 6.X           |
-| **php73-es6-mariadb101**  | _php71-es6-mariadb101-stable_ | master        | 7.1.X | MariaDB 10.1  | 6.X           |
-| **php71-es6-mariadb102**  | _php71-es6-mariadb102-stable_ | master        | 7.1.X | MariaDB 10.2  | 6.X           |
-| **php72-es6-mariadb102**  | _php72-es6-mariadb102-stable_ | master        | 7.2.X | MariaDB 10.2  | 6.X           |
-| **php73-es6-mariadb102**  | _php73-es6-mariadb102-stable_ | master        | 7.3.X | MariaDB 10.2  | 6.X           |
-| **php71-es7-mariadb103**  | _php71-es7-mariadb103-stable_ | master        | 7.1.X | MariaDB 10.3  | 7.X           |
-| **php72-es7-mariadb103**  | _php72-es7-mariadb103-stable_ | master        | 7.2.X | MariaDB 10.3  | 7.X           |
-| **php73-es7-mariadb104**  | _php73-es7-mariadb104-stable_ | master        | 7.3.X | MariaDB 10.4  | 7.X           |
-| **php71-es5-mysql57**     | _php71-es5-mysql57-stable_    | mysql         | 7.1.X | MySQL 5.7     | 5.X           |
-| **php71-es6-mysql57**     | _php71-es6-mysql57-stable_    | mysql         | 7.1.X | MySQL 5.7     | 6.X           |
-| **php72-es6-mysql57**     | _php72-es6-mysql57-stable_    | mysql         | 7.2.X | MySQL 5.7     | 6.X           |
-| **php73-es6-mysql57**     | _php73-es6-mysql57-stable_    | mysql         | 7.3.X | MySQL 5.7     | 6.X           |
-| **php71-es7-mysql57**     | _php71-es7-mysql57-stable_    | mysql         | 7.1.X | MySQL 5.7     | 7.X           |
-| **php72-es7-mysql57**     | _php72-es7-mysql57-stable_    | mysql         | 7.2.X | MySQL 5.7     | 7.X           |
-| **php73-es7-mysql57**     | _php73-es7-mysql57-stable_    | mysql         | 7.3.X | MySQL 5.7     | 7.X           |
-| **php73-es7-mysql80**     | _php73-es7-mysql80-stable_    | mysql         | 7.3.X | MySQL 8.0     | 7.X           |
+| Version                   | Docker tag                    | PHP   | DB            | Elasticsearch |
+| ------------------------- | ----------------------------- | ----: | ------------: | ------------: |
+| **php71-es5-mariadb100**  | _php71-es5-mariadb100-stable_ | 7.1.X | MariaDB 10.0  | 5.X           |
+| **php71-es6-mariadb101**  | _php71-es6-mariadb101-stable_ | 7.1.X | MariaDB 10.1  | 6.X           | 
+| **php72-es6-mariadb101**  | _php72-es6-mariadb101-stable_ | 7.3.X | MariaDB 10.1  | 6.X           |
+| **php73-es6-mariadb101**  | _php71-es6-mariadb101-stable_ | 7.1.X | MariaDB 10.1  | 6.X           |
+| **php71-es6-mariadb102**  | _php71-es6-mariadb102-stable_ | 7.1.X | MariaDB 10.2  | 6.X           |
+| **php72-es6-mariadb102**  | _php72-es6-mariadb102-stable_ | 7.2.X | MariaDB 10.2  | 6.X           |
+| **php73-es6-mariadb102**  | _php73-es6-mariadb102-stable_ | 7.3.X | MariaDB 10.2  | 6.X           |
+| **php71-es7-mariadb103**  | _php71-es7-mariadb103-stable_ | 7.1.X | MariaDB 10.3  | 7.X           |
+| **php72-es7-mariadb103**  | _php72-es7-mariadb103-stable_ | 7.2.X | MariaDB 10.3  | 7.X           |
+| **php73-es7-mariadb104**  | _php73-es7-mariadb104-stable_ | 7.3.X | MariaDB 10.4  | 7.X           |
+
  
 _Note: The `exec` mount opt on `/tmp` is needed for elasticsearch because it maps mem to temp files._
 _The image is big and there's not really a way around it since it has a lot of software and is based on CentOS (which we use for local dev / production deployments, so we want to keep everything else close)._
