@@ -60,7 +60,9 @@ RUN rpm --import https://yum.mariadb.org/RPM-GPG-KEY-MariaDB \
 COPY /rootfs /
 
 RUN chmod 440 /etc/sudoers \
-    && chmod 555 /usr/bin/*
+    && mkdir -p /var/www/html/{generated,var,dev/tests/integration/tmp} \
+    && chmod 777 /var/www/html/{generated,var,dev/tests/integration/tmp}
+
 
 ENV ES_JAVA_OPTS="-Xms128m -Xmx128m" \
     DB_USER="magento2" \
@@ -79,6 +81,6 @@ EXPOSE 22 80 3306 9200
 
 ENTRYPOINT ["/sbin/multirun"]
 
-CMD ["/usr/bin/mgs-filesystem-init", "/usr/bin/elasticsearch-server", "/usr/bin/mysql-server"]
+CMD ["/usr/bin/elasticsearch-server", "/usr/bin/mysql-server"]
 
 HEALTHCHECK --timeout=10s --interval=10s --start-period=10s CMD /usr/bin/healthcheck

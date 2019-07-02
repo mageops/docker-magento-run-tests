@@ -58,7 +58,7 @@ docker run \
     --tmpfs /var/www/html/var:rw,mode=777 \
     --tmpfs /var/www/html/dev/tests/integration/tmp:rw,mode=777 \
     --volume "$(pwd):/var/www/html" \
-    "magesuite/run-tests:stable"
+    "magesuite/run-tests:php72-es6-mariadb102-stable"
 
 # Wait until healthcheck is green
 while [[ "$(docker inspect --format='{{json .State.Health.Status}}' mgs-test)" == '"starting"' ]] ; do sleep 1s && echo "Waiting for start"; done
@@ -94,7 +94,7 @@ docker run \
     --tmpfs /var/www/html/var:rw,mode=777 \
     --tmpfs /var/www/html/dev/tests/integration/tmp:rw,mode=777 \
     --volume "$(pwd):/var/www/html" \
-    "magesuite/run-tests:stable" \
+    "magesuite/run-tests:php72-es6-mariadb102-stable" \
     "/usr/bin/elasticsearch-server" \
     "/usr/bin/mysql-server" \
     "/usr/bin/mgs-run-tests ci creativestyle $(id -u) $(id -g)"
@@ -113,7 +113,7 @@ docker run \
     --tmpfs /var/www/html/var:rw,mode=777 \
     --tmpfs /var/www/html/dev/tests/integration/tmp:rw,mode=777 \
     --volume "$(pwd):/var/www/html" \
-    "magesuite/run-tests:stable" \
+    "magesuite/run-tests:php72-es6-mariadb102-stable" \
     "/bin/bash"
 ```
 
