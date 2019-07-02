@@ -2,7 +2,6 @@ FROM centos:centos7
 
 ARG PHP_VERSION="72"
 ARG ELASTICSEARCH_VERSION="6.8.1"
-ARG MYSQL_VERSION="57"
 
 ENV ES_JAVA_OPTS="-Xms128m -Xmx128m"
 ENV DB_USER="creativestyle"
@@ -12,7 +11,6 @@ ENV COMPOSER_HOME="/opt/composer"
 
 ENV PHP_VERSION="${PHP_VERSION}"
 ENV ELASTICSEARCH_VERSION="${ELASTICSEARCH_VERSION}"
-ENV MYSQL_VERSION="${MYSQL_VERSION}"
 
 RUN ln -svf /usr/share/zoneinfo/UTC /etc/localtime \
  && yum -y update \
@@ -23,8 +21,6 @@ RUN ln -svf /usr/share/zoneinfo/UTC /etc/localtime \
            iproute python-setuptools hostname inotify-tools which \
            openssh-server openssh-clients \
            python-setuptools \
- && yum -y install https://repo.mysql.com/mysql${MYSQL_VERSION}-community-release-el7.rpm \
- && yum -y install mysql-server mysql-client \
  && rpm --import https://rpms.remirepo.net/RPM-GPG-KEY-remi \
  && yum -y install https://rpms.remirepo.net/enterprise/remi-release-7.rpm \
  && yum-config-manager --enable "remi-php${PHP_VERSION}" \
@@ -53,9 +49,16 @@ RUN ln -svf /usr/share/zoneinfo/UTC /etc/localtime \
  && chmod +x /sbin/multirun \
  && mkdir -p /var/www/html \
  && echo -e "#!/bin/bash \n set -e -x \n chown elasticsearch:elasticsearch /var/lib/elasticsearch && chmod ugo+rwx /tmp \n sudo -E -u elasticsearch -g elasticsearch /usr/share/elasticsearch/bin/elasticsearch" > /usr/bin/elasticsearch-server \
- && echo -e "#!/bin/bash \n set -e -x \n chown mysql:mysql /var/lib/mysql && chmod ugo+rwx /tmp \n mysqld --initialize-insecure --user=mysql --datadir=/var/lib/mysql \n sudo -E -u mysql -g mysql /usr/sbin/mysqld" > /usr/bin/mysql-server \
  && echo -e "#!/bin/bash \n set -e -x \n curl -sf localhost:9200 2>&1 > /dev/null && mysqladmin ping 2>&1 > /dev/null" > /usr/bin/healthcheck \
- && chmod +x /usr/bin/{elasticsearch-server,mysql-server,healthcheck}
+ && chmod +x /usr/bin/{elasticsearch-server,healthcheck}
+
+ARG MYSQL_VERSION="57"
+ENV MYSQL_VERSION="${MYSQL_VERSION}"
+
+RUN yum -y install https://repo.mysql.com/mysql${MYSQL_VERSION}-community-release-el7.rpm \
+ && yum -y install mysql-server mysql-client \
+ && echo -e "#!/bin/bash \n set -e -x \n chown mysql:mysql /var/lib/mysql && chmod ugo+rwx /tmp \n mysqld --initialize-insecure --user=mysql --datadir=/var/lib/mysql \n sudo -E -u mysql -g mysql /usr/sbin/mysqld" > /usr/bin/mysql-server \
+ && chmod +x /usr/bin/mysql-server
 
 COPY mgs-run-tests /usr/bin/mgs-run-tests
 
