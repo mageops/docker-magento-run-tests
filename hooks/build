@@ -3,7 +3,7 @@
 # Do the "standard" build first
 docker build -f "$DOCKERFILE_PATH" -t "$IMAGE_NAME" .
 
-function build_parameterized() {
+function build_parametrized() {
     PARAMETRIZED_TAG_PREFIX="$1"; shift
     PARAMETRIZED_IMAGE_NAME="${DOCKER_REPO}:${PARAMETRIZED_TAG_PREFIX}-${DOCKER_TAG}"
 
@@ -11,15 +11,18 @@ function build_parameterized() {
     docker push "${PARAMETRIZED_IMAGE_NAME}"
 }
 
-build_parametrized "php71-es5-mysql57" --build-arg PHP_VERSION="71" --build-arg ELASTICSEARCH_VERSION="5.2.2"
+build_parametrized "php71-es5-mariadb100" --build-arg PHP_VERSION="71" --build-arg ELASTICSEARCH_VERSION="5.2.2"        --build-arg MARIADB_VERSION="10.0"
 
-build_parametrized "php71-es6-mysql57" --build-arg PHP_VERSION="71" --build-arg ELASTICSEARCH_VERSION="6.8.1"
-build_parametrized "php72-es6-mysql57" --build-arg PHP_VERSION="72" --build-arg ELASTICSEARCH_VERSION="6.8.1"
-build_parametrized "php73-es6-mysql57" --build-arg PHP_VERSION="73" --build-arg ELASTICSEARCH_VERSION="6.8.1"
+build_parametrized "php71-es6-mariadb101" --build-arg PHP_VERSION="71" --build-arg ELASTICSEARCH_VERSION="6.8.1"        --build-arg MARIADB_VERSION="10.1"
+build_parametrized "php72-es6-mariadb101" --build-arg PHP_VERSION="72" --build-arg ELASTICSEARCH_VERSION="6.8.1"        --build-arg MARIADB_VERSION="10.1"
+build_parametrized "php73-es6-mariadb101" --build-arg PHP_VERSION="73" --build-arg ELASTICSEARCH_VERSION="6.8.1"        --build-arg MARIADB_VERSION="10.1"
 
-build_parametrized "php71-es7-mysql57" --build-arg PHP_VERSION="71" --build-arg ELASTICSEARCH_VERSION="7.2.0-x86_64"
-build_parametrized "php72-es7-mysql57" --build-arg PHP_VERSION="72" --build-arg ELASTICSEARCH_VERSION="7.2.0-x86_64"
-build_parametrized "php73-es7-mysql57" --build-arg PHP_VERSION="73" --build-arg ELASTICSEARCH_VERSION="7.2.0-x86_64"
+build_parametrized "php71-es6-mariadb102" --build-arg PHP_VERSION="71" --build-arg ELASTICSEARCH_VERSION="6.8.1"        --build-arg MARIADB_VERSION="10.2"
+build_parametrized "php72-es6-mariadb102" --build-arg PHP_VERSION="72" --build-arg ELASTICSEARCH_VERSION="6.8.1"        --build-arg MARIADB_VERSION="10.2"
+build_parametrized "php73-es6-mariadb102" --build-arg PHP_VERSION="73" --build-arg ELASTICSEARCH_VERSION="6.8.1"        --build-arg MARIADB_VERSION="10.2"
 
-build_parametrized "php73-es7-mysql80" --build-arg PHP_VERSION="73" --build-arg ELASTICSEARCH_VERSION="7.2.0-x86_64" --build-arg MYSQL_VERSION="80"
+build_parametrized "php71-es7-mariadb103" --build-arg PHP_VERSION="71" --build-arg ELASTICSEARCH_VERSION="7.2.0-x86_64" --build-arg MARIADB_VERSION="10.3"
+build_parametrized "php72-es7-mariadb103" --build-arg PHP_VERSION="72" --build-arg ELASTICSEARCH_VERSION="7.2.0-x86_64" --build-arg MARIADB_VERSION="10.3"
+
+build_parametrized "php73-es7-mariadb104" --build-arg PHP_VERSION="73" --build-arg ELASTICSEARCH_VERSION="7.2.0-x86_64" --build-arg MARIADB_VERSION="10.4"
 
