@@ -61,8 +61,7 @@ COPY /rootfs /
 
 RUN chmod 440 /etc/sudoers \
     && mkdir -p /var/www/html/{generated,var,dev/tests/integration/tmp} \
-    && chmod 777 /var/www/html/{generated,var,dev/tests/integration/tmp}
-
+    && chmod 777 /var/www/html/{generated,var,dev/tests/integration/tmp} /tmp
 
 ENV ES_JAVA_OPTS="-Xms128m -Xmx128m" \
     DB_USER="magento2" \
@@ -81,6 +80,6 @@ EXPOSE 22 80 3306 9200
 
 ENTRYPOINT ["/sbin/multirun"]
 
-CMD ["/usr/bin/elasticsearch-server", "/usr/bin/mysql-server"]
+CMD ["/usr/bin/mgs-fix-perms", "/usr/bin/elasticsearch-server", "/usr/bin/mysql-server"]
 
 HEALTHCHECK --timeout=10s --interval=10s --start-period=10s CMD /usr/bin/healthcheck
