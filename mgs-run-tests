@@ -30,7 +30,7 @@ function prepare_mysql() {
 
     mysql -uroot -h127.0.0.1 -e "CREATE USER '${DB_USER}'@'%' IDENTIFIED BY '${DB_PASS}'"
     mysql -uroot -h127.0.0.1 -e "GRANT ALL PRIVILEGES ON *.* TO '${DB_USER}'@'%' WITH GRANT OPTION"
-    mysql -uroot -h127.0.0.1 -e "CREATE DATABASE '${DB_NAME}'"
+    mysql -uroot -h127.0.0.1 -e "CREATE DATABASE ${DB_NAME}"
 }
 
 function clean() {
