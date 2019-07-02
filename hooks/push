@@ -1,0 +1,4 @@
+#!/bin/bash
+
+push_main
+push_variants
