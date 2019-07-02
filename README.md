@@ -31,8 +31,8 @@ See [all tags on Docker Hub](https://hub.docker.com/r/magesuite/run-tests/tags).
 | ------------------------- | ----------------------------- | ----: | ------------: | ------------: |
 | **php71-es5-mariadb100**  | _php71-es5-mariadb100-stable_ | 7.1.X | MariaDB 10.0  | 5.X           |
 | **php71-es6-mariadb101**  | _php71-es6-mariadb101-stable_ | 7.1.X | MariaDB 10.1  | 6.X           | 
-| **php72-es6-mariadb101**  | _php72-es6-mariadb101-stable_ | 7.3.X | MariaDB 10.1  | 6.X           |
-| **php73-es6-mariadb101**  | _php71-es6-mariadb101-stable_ | 7.1.X | MariaDB 10.1  | 6.X           |
+| **php72-es6-mariadb101**  | _php72-es6-mariadb101-stable_ | 7.2.X | MariaDB 10.1  | 6.X           |
+| **php73-es6-mariadb101**  | _php71-es6-mariadb101-stable_ | 7.3.X | MariaDB 10.1  | 6.X           |
 | **php71-es6-mariadb102**  | _php71-es6-mariadb102-stable_ | 7.1.X | MariaDB 10.2  | 6.X           |
 | **php72-es6-mariadb102**  | _php72-es6-mariadb102-stable_ | 7.2.X | MariaDB 10.2  | 6.X           |
 | **php73-es6-mariadb102**  | _php73-es6-mariadb102-stable_ | 7.3.X | MariaDB 10.2  | 6.X           |
