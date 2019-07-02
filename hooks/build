@@ -11,8 +11,6 @@ function build_parametrized() {
     docker push "${PARAMETRIZED_IMAGE_NAME}"
 }
 
-build_parametrized "php71-es5-mariadb100" --build-arg PHP_VERSION="71" --build-arg ELASTICSEARCH_VERSION="5.2.2"        --build-arg MARIADB_VERSION="10.0"
-
 build_parametrized "php71-es6-mariadb101" --build-arg PHP_VERSION="71" --build-arg ELASTICSEARCH_VERSION="6.8.1"        --build-arg MARIADB_VERSION="10.1"
 build_parametrized "php72-es6-mariadb101" --build-arg PHP_VERSION="72" --build-arg ELASTICSEARCH_VERSION="6.8.1"        --build-arg MARIADB_VERSION="10.1"
 build_parametrized "php73-es6-mariadb101" --build-arg PHP_VERSION="73" --build-arg ELASTICSEARCH_VERSION="6.8.1"        --build-arg MARIADB_VERSION="10.1"
