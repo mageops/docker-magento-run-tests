@@ -4,8 +4,8 @@ ARG PHP_VERSION="72"
 ARG ELASTICSEARCH_VERSION="6.8.1"
 
 ENV ES_JAVA_OPTS="-Xms128m -Xmx128m"
-ENV DB_USER="creativestyle"
-ENV DB_PASS="brightSideOfLife"
+ENV DB_USER="magento2"
+ENV DB_PASS="magento2"
 ENV DB_NAME="magento2_integration_tests"
 ENV COMPOSER_HOME="/opt/composer"
 

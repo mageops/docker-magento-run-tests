@@ -3,8 +3,8 @@ services:
   tests:
     image: magesuite/run-tests:stable
     environment:
-      - DB_USER=creativestyle
-      - DB_PASS=brightSideOfLife
+      - DB_USER=magento2
+      - DB_PASS=magento2
       - DB_NAME=magento2_integration_tests
     volumes:
       - type: bind

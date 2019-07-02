@@ -26,11 +26,20 @@ fi
 set -e
 
 function prepare_mysql() {
-    mysqlshow "$DB_NAME" 2>&1 > /dev/null && return 0
 
-    mysql -uroot -h127.0.0.1 -e "CREATE USER '${DB_USER}'@'%' IDENTIFIED BY '${DB_PASS}'"
-    mysql -uroot -h127.0.0.1 -e "GRANT ALL PRIVILEGES ON *.* TO '${DB_USER}'@'%' WITH GRANT OPTION"
-    mysql -uroot -h127.0.0.1 -e "CREATE DATABASE ${DB_NAME}"
+cat <<ENDSQL | mysql -uroot
+     DROP USER IF EXISTS '${DB_USER}'@'localhost';
+     DROP USER IF EXISTS '${DB_USER}'@'%';
+
+     CREATE USER '${DB_USER}'@'localhost' IDENTIFIED BY '${DB_PASS}';
+     CREATE USER '${DB_USER}'@'%' IDENTIFIED BY '${DB_PASS}';
+     GRANT ALL PRIVILEGES ON *.* TO '${DB_USER}'@'localhost' WITH GRANT OPTION;
+     GRANT PROXY ON '${DB_USER}'@'%' TO '${DB_USER}'@'localhost' WITH GRANT OPTION;
+
+     FLUSH PRIVILEGES;
+
+     CREATE DATABASE IF NOT EXISTS ${DB_NAME};
+ENDSQL
 }
 
 function clean() {
