@@ -7,7 +7,7 @@
 
 Please see the docker hub repo page [magesuite/run-tests](https://hub.docker.com/r/magesuite/run-tests).
 
-## Software
+## Docker tags and software versions
 
 The `master` branch uses Maria DB 10.2, Elasticsearch 6 and PHP 7.2 which are the latest versions supported by Magento.
 
@@ -15,7 +15,19 @@ Other versions will be avaialble on appropriately named branches / docker tags.
 
 See [all tags on Docker Hub](https://hub.docker.com/r/magesuite/run-tests/tags).
 
-# Notable versions 
+## Tag suffixes
+
+- `-latest` - built from branch tip
+- `-mysql` (or generally `-{branch}`) - built from branch tip
+- `-stable` - built from tags named `v1.X` or `v1.X-mysql` (used to tag `mysql` branch commits)
+
+## Plain tags
+
+- `latest` - master branch tip
+- `stable` - latest tag named `v1.X` or `v1.X-mysql`
+- `{branch}` - tip of `{branch}`
+
+## Notable versions 
 
 | Version                   | Docker tag                    | Branch        | PHP   | DB            | Elasticsearch |
 | ------------------------- | ----------------------------- | :-----------: | ----: | ------------: | ------------: |
