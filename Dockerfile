@@ -52,14 +52,14 @@ RUN ln -svf /usr/share/zoneinfo/UTC /etc/localtime \
  && echo -e "#!/bin/bash \n set -e -x \n curl -sf localhost:9200 2>&1 > /dev/null && mysqladmin ping 2>&1 > /dev/null" > /usr/bin/healthcheck \
  && chmod +x /usr/bin/{elasticsearch-server,healthcheck}
 
-ARG MARIADB_VERSION="10.3"
+ARG MARIADB_VERSION="10.2"
 ENV MARIADB_VERSION="${MARIADB_VERSION}"
 
 RUN rpm --import https://yum.mariadb.org/RPM-GPG-KEY-MariaDB \
      && echo -e "[mariadb]\nname = MariaDB\nbaseurl = http://yum.mariadb.org/${MARIADB_VERSION}/centos7-amd64\ngpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB\ngpgcheck=1\nenabled=1" > /etc/yum.repos.d/MariaDB.repo \
      && yum -y install MariaDB-server MariaDB-client \
      && echo -e "#!/bin/bash \n set -e -x \n chown mysql:mysql /var/lib/mysql && chmod ugo+rwx /tmp \n mysql_install_db --basedir=/usr --datadir=/var/lib/mysql --user=mysql \n sudo -E -u mysql -g mysql /usr/sbin/mysqld" > /usr/bin/mysql-server \
-     && chmod +x /usr/bin/mysql-server
+     && chmod +x /usr/bin/mysql-server \
      && yum clean all
 
 COPY mgs-run-tests /usr/bin/mgs-run-tests

@@ -3,15 +3,28 @@
 [![](https://images.microbadger.com/badges/image/magesuite/run-tests:stable.svg)](https://microbadger.com/images/magesuite/run-tests:stable "Docker Image Badge") [![](https://images.microbadger.com/badges/version/magesuite/run-tests:stable.svg)](https://microbadger.com/images/magesuite/run-tests:stable "Docker Image Version Badge")
 
 
-_Note: The `exec` mount opt on `/tmp` is needed for elasticsearch because it maps mem to temp files._
+*Use `stable` or `-stable` suffixed docker tags (are built from `vX.Y` git tags), others may be unstable.*
 
 ## Software
 
-For now the `master` branch uses MySQL 5.7, Elasticsearch 6 and PHP 7.2.
+The `master` branch uses Maria DB 10.2, Elasticsearch 6 and PHP 7.2 which are the latest versions supported by Magento.
 
-Other versions will be avaialble on appropriately named branches / docker tags.
+Other versions will be avaialble on appropriately named branches / docker tags. Notable versions are:
 
-The image is big and there's not really a way around it since it has a lot of software and is based on CentOS (which we use for local dev / production deployments, so we want to keep everything else close).
+ - php71-es5-mariadb100
+ - php71-es6-mariadb101
+ - php72-es6-mariadb101
+ - php73-es6-mariadb101
+ - php71-es6-mariadb102
+ - php72-es6-mariadb102
+ - php73-es6-mariadb102
+ - php71-es7-mariadb103
+ - php72-es7-mariadb103
+ - php73-es7-mariadb104
+ 
+
+_Note: The `exec` mount opt on `/tmp` is needed for elasticsearch because it maps mem to temp files._
+_The image is big and there's not really a way around it since it has a lot of software and is based on CentOS (which we use for local dev / production deployments, so we want to keep everything else close)._
 
 ## Basic usage
 
