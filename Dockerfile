@@ -43,7 +43,7 @@ RUN ln -svf /usr/share/zoneinfo/UTC /etc/localtime \
  && curl -L https://github.com/nicolas-van/multirun/releases/download/0.3.2/multirun-glibc-0.3.2.tar.gz | tar -xz -C /sbin \
  && chmod +x /sbin/multirun \
  && mkdir -p /var/www/html \
- && echo -e "#!/bin/bash \n set -e -x \n chown elasticsearch:elasticsearch /var/lib/elasticsearch \n sudo -E -u elasticsearch -g elasticsearch /usr/share/elasticsearch/bin/elasticsearch" > /usr/bin/elasticsearch-server \
+ && echo -e "#!/bin/bash \n set -e -x \n /usr/bin/mgs-fix-perms \n chown elasticsearch:elasticsearch /var/lib/elasticsearch \n sudo -E -u elasticsearch -g elasticsearch /usr/share/elasticsearch/bin/elasticsearch" > /usr/bin/elasticsearch-server \
  && echo -e "#!/bin/bash \n set -e -x \n curl -sf localhost:9200 2>&1 > /dev/null && mysqladmin ping 2>&1 > /dev/null" > /usr/bin/healthcheck \
  && chmod +x /usr/bin/{elasticsearch-server,healthcheck}
 
@@ -53,7 +53,7 @@ ENV MARIADB_VERSION="${MARIADB_VERSION}"
 RUN rpm --import https://yum.mariadb.org/RPM-GPG-KEY-MariaDB \
      && echo -e "[mariadb]\nname = MariaDB\nbaseurl = http://yum.mariadb.org/${MARIADB_VERSION}/centos7-amd64\ngpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB\ngpgcheck=1\nenabled=1" > /etc/yum.repos.d/MariaDB.repo \
      && yum -y install MariaDB-server MariaDB-client \
-     && echo -e "#!/bin/bash \n set -e -x \n chown mysql:mysql /var/lib/mysql \n mysql_install_db --basedir=/usr --datadir=/var/lib/mysql --user=mysql \n sudo -E -u mysql -g mysql /usr/sbin/mysqld" > /usr/bin/mysql-server \
+     && echo -e "#!/bin/bash \n set -e -x \n /usr/bin/mgs-fix-perms \n chown mysql:mysql /var/lib/mysql \n mysql_install_db --basedir=/usr --datadir=/var/lib/mysql --user=mysql \n sudo -E -u mysql -g mysql /usr/sbin/mysqld" > /usr/bin/mysql-server \
      && chmod +x /usr/bin/mysql-server \
      && yum clean all
 
@@ -80,6 +80,6 @@ EXPOSE 22 80 3306 9200
 
 ENTRYPOINT ["/sbin/multirun"]
 
-CMD ["/usr/bin/mgs-fix-perms", "/usr/bin/elasticsearch-server", "/usr/bin/mysql-server"]
+CMD ["/usr/bin/elasticsearch-server", "/usr/bin/mysql-server"]
 
 HEALTHCHECK --timeout=10s --interval=10s --start-period=10s CMD /usr/bin/healthcheck
