@@ -21,8 +21,15 @@ Other versions will be avaialble on appropriately named branches / docker tags. 
  - php71-es7-mariadb103
  - php72-es7-mariadb103
  - php73-es7-mariadb104
+ - php71-es5-mysql57
+ - php71-es6-mysql57
+ - php72-es6-mysql57
+ - php73-es6-mysql57
+ - php71-es7-mysql57
+ - php72-es7-mysql57
+ - php73-es7-mysql57
+ - php73-es7-mysql80
  
-
 _Note: The `exec` mount opt on `/tmp` is needed for elasticsearch because it maps mem to temp files._
 _The image is big and there's not really a way around it since it has a lot of software and is based on CentOS (which we use for local dev / production deployments, so we want to keep everything else close)._
 
