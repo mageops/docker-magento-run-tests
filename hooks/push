@@ -1,4 +1,6 @@
 #!/bin/bash
 
+. hooks/variants
+
 push_main
 push_variants
