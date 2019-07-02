@@ -51,12 +51,9 @@ docker run \
     --rm \
     --detach \
     --name mgs-test \
-    --tmpfs /tmp:rw,exec \
-    --tmpfs /var/lib/mysql \
-    --tmpfs /var/lib/elasticsearch \
-    --tmpfs /var/www/html/generated \
-    --tmpfs /var/www/html/var \
-    --tmpfs /dev/tests/integration/tmp \
+    --tmpfs /tmp:rw,exec,mode=1777 \
+    --tmpfs /var/lib/mysql:rw,mode=777  \
+    --tmpfs /var/lib/elasticsearch:rw,mode=777 \
     --volume "$(pwd):/var/www/html" \
     "magesuite/run-tests:stable"
 
@@ -87,12 +84,9 @@ tests will wait for healthcheck to become green before proceeding:
 ```bash
 docker run \
     --tty \
-    --tmpfs /tmp:rw,exec \
-    --tmpfs /var/lib/mysql \
-    --tmpfs /var/lib/elasticsearch \
-    --tmpfs /var/www/html/generated \
-    --tmpfs /var/www/html/var \
-    --tmpfs /dev/tests/integration/tmp \
+    --tmpfs /tmp:rw,exec,mode=1777 \
+    --tmpfs /var/lib/mysql:rw,mode=777  \
+    --tmpfs /var/lib/elasticsearch:rw,mode=777 \
     --volume "$(pwd):/var/www/html" \
     "magesuite/run-tests:stable" \
     "/usr/bin/elasticsearch-server" \
@@ -106,12 +100,9 @@ docker run \
 docker run \
     --tty \
     --interactive \
-    --tmpfs /tmp:rw,exec \
-    --tmpfs /var/lib/mysql \
-    --tmpfs /var/lib/elasticsearch \
-    --tmpfs /var/www/html/generated \
-    --tmpfs /var/www/html/var \
-    --tmpfs /dev/tests/integration/tmp \
+    --tmpfs /tmp:rw,exec,mode=1777 \
+    --tmpfs /var/lib/mysql:rw,mode=777  \
+    --tmpfs /var/lib/elasticsearch:rw,mode=777 \
     --volume "$(pwd):/var/www/html" \
     "magesuite/run-tests:stable" \
     "/bin/bash"

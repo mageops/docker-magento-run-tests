@@ -1,5 +1,7 @@
 .idea
 .git
 .gitignore
+hooks
 docker-compose.yml
 README.md
+

@@ -1,0 +1,13 @@
+#!/bin/bash
+
+rm -rf \
+    /tmp/* \
+    /var/www/html/generated/* \
+    /var/www/html/var/* \
+    /var/www/html/dev/tests/integration/tmp/*
+
+chmod 777 \
+    /tmp \
+    /var/www/html/generated/ \
+    /var/www/html/var/ \
+    /var/www/html/dev/tests/integration/tmp/
