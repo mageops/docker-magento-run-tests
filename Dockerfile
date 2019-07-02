@@ -60,6 +60,9 @@ RUN rpm --import https://yum.mariadb.org/RPM-GPG-KEY-MariaDB \
 COPY /rootfs /
 
 RUN chmod 440 /etc/sudoers \
+    && mkdir -p /var/lib/{mysql,elasticsearch} \
+    && chown elasticsearch:elasticsearch /var/lib/elasticsearch \
+    && chown mysql:mysql /var/lib/mysql \
     && mkdir -p /var/www/html/{generated,var,dev/tests/integration/tmp} \
     && chmod 777 /var/www/html/{generated,var,dev/tests/integration/tmp} /tmp
 
