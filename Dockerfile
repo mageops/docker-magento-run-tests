@@ -58,7 +58,7 @@ ENV MARIADB_VERSION="${MARIADB_VERSION}"
 RUN rpm --import https://yum.mariadb.org/RPM-GPG-KEY-MariaDB \
      && echo -e "[mariadb]\nname = MariaDB\nbaseurl = http://yum.mariadb.org/${MARIADB_VERSION}/centos7-amd64\ngpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB\ngpgcheck=1\nenabled=1" > /etc/yum.repos.d/MariaDB.repo \
      && yum -y install MariaDB-server MariaDB-client \
-     && echo -e "#!/bin/bash \n set -e -x \n chown mysql:mysql /var/lib/mysql && chmod ugo+rwx /tmp \n mysqld --initialize-insecure --user=mysql --datadir=/var/lib/mysql \n sudo -E -u mysql -g mysql /usr/sbin/mysqld" > /usr/bin/mysql-server \
+     && echo -e "#!/bin/bash \n set -e -x \n chown mysql:mysql /var/lib/mysql && chmod ugo+rwx /tmp \n mysql_install_db --basedir=/usr --datadir=/var/lib/mysql --user=mysql \n sudo -E -u mysql -g mysql /usr/sbin/mysqld" > /usr/bin/mysql-server \
      && chmod +x /usr/bin/mysql-server
      && yum clean all
 
