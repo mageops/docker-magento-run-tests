@@ -64,7 +64,7 @@ function run_unit() {
 
 function run_integration() {
     clean
-    phing tests:unit -Denvname=${ENVNAME} -Dtestsuite=${TESTSUITE}
+    phing tests:integration -Denvname=${ENVNAME} -Dtestsuite=${TESTSUITE}
 }
 
 prepare_mysql
