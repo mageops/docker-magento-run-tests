@@ -1,15 +1,42 @@
+[[ ! -z "$DOCKERFILE_PATH" ]]           || DOCKERFILE_PATH="Dockerfile"
+[[ ! -z "$DOCKER_REPO" ]]               || DOCKER_REPO="magesuite/run-tests"
+[[ ! -z "$DOCKER_TAG" ]]                || DOCKER_TAG="latest"
+[[ ! -z "$IMAGE_NAME" ]]                || IMAGE_NAME="${DOCKER_REPO}:${DOCKER_TAG}"
+
+[[ ! -z "$SOURCE_COMMIT" ]]             || SOURCE_COMMIT="$(git rev-parse --short HEAD)"
+[[ ! -z "$SOURCE_BRANCH" ]]             || SOURCE_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+[[ ! -z "$COMMIT_MSG" ]]                || COMMIT_MSG="$(git log -1 --pretty=%B)"
+
+[[ ! -z "$DOCKER_BUILD_CACHE_FROM" ]]   || DOCKER_BUILD_CACHE_FROM="${DOCKER_REPO}:latest"
+
+DOCKER_BUILD_ARGS="$DOCKER_BUILD_ARGS \
+    --label VCS_COMMIT=${SOURCE_COMMIT} \
+    --label VCS_BRANCH=${SOURCE_BRANCH}
+"
+
+if [[ ! -z "$DOCKER_BUILD_CACHE_FROM" ]] ; then
+    DOCKER_BUILD_ARGS="$DOCKER_BUILD_ARGS --cache-from ${DOCKER_BUILD_CACHE_FROM}"
+fi
+
 IMAGE_VARIANTS=(
-    'VARIANT_NAME="php71-es6-mariadb101" ; PHP_VERSION="71" ; ELASTICSEARCH_VERSION="6.8.1"        ; MARIADB_VERSION="10.1" ;'
-    'VARIANT_NAME="php72-es6-mariadb101" ; PHP_VERSION="72" ; ELASTICSEARCH_VERSION="6.8.1"        ; MARIADB_VERSION="10.1" ;'
+#    'VARIANT_NAME="php71-es6-mariadb101" ; PHP_VERSION="71" ; ELASTICSEARCH_VERSION="6.8.1"        ; MARIADB_VERSION="10.1" ;'
+#    'VARIANT_NAME="php72-es6-mariadb101" ; PHP_VERSION="72" ; ELASTICSEARCH_VERSION="6.8.1"        ; MARIADB_VERSION="10.1" ;'
     'VARIANT_NAME="php73-es6-mariadb101" ; PHP_VERSION="73" ; ELASTICSEARCH_VERSION="6.8.1"        ; MARIADB_VERSION="10.1" ;'
-    'VARIANT_NAME="php71-es6-mariadb102" ; PHP_VERSION="71" ; ELASTICSEARCH_VERSION="6.8.1"        ; MARIADB_VERSION="10.2" ;'
+#    'VARIANT_NAME="php71-es6-mariadb102" ; PHP_VERSION="71" ; ELASTICSEARCH_VERSION="6.8.1"        ; MARIADB_VERSION="10.2" ;'
     'VARIANT_NAME="php72-es6-mariadb102" ; PHP_VERSION="72" ; ELASTICSEARCH_VERSION="6.8.1"        ; MARIADB_VERSION="10.2" ;'
-    'VARIANT_NAME="php73-es6-mariadb102" ; PHP_VERSION="73" ; ELASTICSEARCH_VERSION="6.8.1"        ; MARIADB_VERSION="10.2" ;'
-    'VARIANT_NAME="php71-es7-mariadb103" ; PHP_VERSION="71" ; ELASTICSEARCH_VERSION="7.2.0-x86_64" ; MARIADB_VERSION="10.3" ;'
-    'VARIANT_NAME="php72-es7-mariadb103" ; PHP_VERSION="72" ; ELASTICSEARCH_VERSION="7.2.0-x86_64" ; MARIADB_VERSION="10.3" ;'
-    'VARIANT_NAME="php73-es7-mariadb104" ; PHP_VERSION="73" ; ELASTICSEARCH_VERSION="7.2.0-x86_64" ; MARIADB_VERSION="10.4" ;'
+#    'VARIANT_NAME="php73-es6-mariadb102" ; PHP_VERSION="73" ; ELASTICSEARCH_VERSION="6.8.1"        ; MARIADB_VERSION="10.2" ;'
+#    'VARIANT_NAME="php71-es7-mariadb103" ; PHP_VERSION="71" ; ELASTICSEARCH_VERSION="7.2.0-x86_64" ; MARIADB_VERSION="10.3" ;'
+#    'VARIANT_NAME="php72-es7-mariadb103" ; PHP_VERSION="72" ; ELASTICSEARCH_VERSION="7.2.0-x86_64" ; MARIADB_VERSION="10.3" ;'
+#    'VARIANT_NAME="php73-es7-mariadb104" ; PHP_VERSION="73" ; ELASTICSEARCH_VERSION="7.2.0-x86_64" ; MARIADB_VERSION="10.4" ;'
 )
 
+function docker_build() {
+    docker build . -f "${DOCKERFILE_PATH}" ${DOCKER_BUILD_ARGS} $@
+}
+
+function docker_push() {
+    docker push $@
+}
 
 function variant_image_name() {
     echo "${DOCKER_REPO}:${@}-${DOCKER_TAG}"
@@ -18,12 +45,11 @@ function variant_image_name() {
 function build_parametrized() {
     VARIANT_NAME="$1"; shift
 
-    docker build -f "${DOCKERFILE_PATH}" -t "$(variant_image_name ${VARIANT_NAME})" . $@
+    docker_build -t "$(variant_image_name ${VARIANT_NAME})" $@
 }
 
-
 function build_main() {
-    docker build -f "$DOCKERFILE_PATH" -t "$IMAGE_NAME" .
+    docker_build -t "$IMAGE_NAME"
 }
 
 function build_variants() {
@@ -33,15 +59,14 @@ function build_variants() {
     done
 }
 
-
 function push_main() {
-    docker push "$IMAGE_NAME"
+    docker_push "$IMAGE_NAME"
 }
 
 function push_variants() {
     for VARIANT_DATA in "${IMAGE_VARIANTS[@]}" ; do
         eval "$VARIANT_DATA";
-        docker push "$(variant_image_name ${VARIANT_NAME})"
+        docker_push "$(variant_image_name ${VARIANT_NAME})"
     done
 }
 
