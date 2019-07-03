@@ -45,8 +45,9 @@ _The image is big and there's not really a way around it since it has a lot of s
 
 ## Basic usage
 
+### Start the container with all services
+
 ```bash
-# Start the container with all services
 docker run \
     --rm \
     --detach \
@@ -76,7 +77,7 @@ docker exec \
     /usr/bin/mgs-run-tests ci creativestyle "$(id -u)" "$(id -g)"
 ```
 
-** Alternatively if the internal UID/GID switch doesn't work for you for some reason you can try switching the docker UID/GID:**
+**_Alternatively_ if the internal UID/GID switch doesn't work for you for some reason you can try switching the docker UID/GID:**
 
 ```bash
 docker exec \

@@ -10,9 +10,6 @@ IMAGE_VARIANTS=(
     'VARIANT_NAME="php73-es7-mariadb104" ; PHP_VERSION="73" ; ELASTICSEARCH_VERSION="7.2.0-x86_64" ; MARIADB_VERSION="10.4" ;'
 )
 
-function build_main() {
-    docker build -f "$DOCKERFILE_PATH" -t "$IMAGE_NAME" .
-}
 
 function variant_image_name() {
     echo "${DOCKER_REPO}:${@}-${DOCKER_TAG}"
@@ -24,11 +21,21 @@ function build_parametrized() {
     docker build -f "${DOCKERFILE_PATH}" -t "$(variant_image_name ${VARIANT_NAME})" . $@
 }
 
+
+function build_main() {
+    docker build -f "$DOCKERFILE_PATH" -t "$IMAGE_NAME" .
+}
+
 function build_variants() {
     for VARIANT_DATA in "${IMAGE_VARIANTS[@]}" ; do
         eval "$VARIANT_DATA";
         build_parametrized "$VARIANT_NAME" --build-arg PHP_VERSION="$PHP_VERSION" --build-arg ELASTICSEARCH_VERSION="$ELASTICSEARCH_VERSION" --build-arg MARIADB_VERSION="$MARIADB_VERSION"
     done
+}
+
+
+function push_main() {
+    docker push "$IMAGE_NAME"
 }
 
 function push_variants() {
@@ -38,7 +45,4 @@ function push_variants() {
     done
 }
 
-function push_main() {
-    push "$IMAGE_NAME"
-}
 
