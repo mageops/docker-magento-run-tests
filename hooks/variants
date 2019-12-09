@@ -1,5 +1,5 @@
 [[ ! -z "$DOCKERFILE_PATH" ]]           || DOCKERFILE_PATH="Dockerfile"
-[[ ! -z "$DOCKER_REPO" ]]               || DOCKER_REPO="magesuite/run-tests"
+[[ ! -z "$DOCKER_REPO" ]]               || DOCKER_REPO="mageops/magento-run-tests"
 [[ ! -z "$DOCKER_TAG" ]]                || DOCKER_TAG="latest"
 [[ ! -z "$IMAGE_NAME" ]]                || IMAGE_NAME="${DOCKER_REPO}:${DOCKER_TAG}"
 
