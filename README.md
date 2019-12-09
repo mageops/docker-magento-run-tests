@@ -1,7 +1,7 @@
+
+[![Docker Hub Build Status](https://img.shields.io/docker/cloud/build/mageops/magento-run-tests?label=Docker+Image+Build)](https://hub.docker.com/r/mageops/magento-run-tests/builds)
+
 # MageSuite Docker Container For Running Magento Tests
-
-[![](https://images.microbadger.com/badges/image/magesuite/run-tests:stable.svg)](https://microbadger.com/images/magesuite/run-tests:stable "Docker Image Badge") [![](https://images.microbadger.com/badges/version/magesuite/run-tests:stable.svg)](https://microbadger.com/images/magesuite/run-tests:stable "Docker Image Version Badge")
-
 
 *Use `stable` or `-stable` suffixed docker tags (are built from `vX.Y` git tags), others may be unstable.*
 
