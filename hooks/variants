@@ -1,5 +1,6 @@
 [[ ! -z "$DOCKERFILE_PATH" ]]           || DOCKERFILE_PATH="Dockerfile"
 [[ ! -z "$DOCKER_REPO" ]]               || DOCKER_REPO="mageops/magento-run-tests"
+[[ ! -z "$DOCKER_REPO_LEGACY" ]]        || DOCKER_REPO="magesuite/run-tests"
 [[ ! -z "$DOCKER_TAG" ]]                || DOCKER_TAG="latest"
 [[ ! -z "$IMAGE_NAME" ]]                || IMAGE_NAME="${DOCKER_REPO}:${DOCKER_TAG}"
 
@@ -42,6 +43,10 @@ function variant_image_name() {
     echo "${DOCKER_REPO}:${@}-${DOCKER_TAG}"
 }
 
+function variant_image_name_legacy() {
+    echo "${DOCKER_REPO_LEGACY}:${@}-${DOCKER_TAG}"
+}
+
 function build_parametrized() {
     VARIANT_NAME="$1"; shift
 
@@ -67,6 +72,8 @@ function push_variants() {
     for VARIANT_DATA in "${IMAGE_VARIANTS[@]}" ; do
         eval "$VARIANT_DATA";
         docker_push "$(variant_image_name ${VARIANT_NAME})"
+        docker tag "$(variant_image_name ${VARIANT_NAME})" "$(variant_image_name_legacy ${VARIANT_NAME})"
+        docker_push "$(variant_image_name_legacy ${VARIANT_NAME})"
     done
 }
 
