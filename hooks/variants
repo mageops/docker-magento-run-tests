@@ -1,3 +1,6 @@
+
+set -xeuo pipefail 
+
 [[ ! -z "$DOCKERFILE_PATH" ]]           || DOCKERFILE_PATH="Dockerfile"
 [[ ! -z "$DOCKER_REPO" ]]               || DOCKER_REPO="mageops/magento-run-tests"
 [[ ! -z "$DOCKER_REPO_LEGACY" ]]        || DOCKER_REPO_LEGACY="magesuite/run-tests"
