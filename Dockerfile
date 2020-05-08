@@ -73,7 +73,7 @@ RUN rpm --import https://rpms.remirepo.net/RPM-GPG-KEY-remi \
             php php-devel php-gd php-pdo \
             php-soap php-xmlrpc php-xml php-intl php-mcrypt \
             php-mysql php-mbstring php-zip php-imagick php-bcmath \
-            php-opcache php-imagick php-curl php-pecl-apcu
+            php-opcache php-imagick php-curl php-pecl-apcu php-gmp
 
 ENV COMPOSER_HOME="/opt/composer"
 
