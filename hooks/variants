@@ -1,22 +1,22 @@
 
 set -xeuo pipefail 
 
-[[ ! -z "$DOCKERFILE_PATH" ]]           || DOCKERFILE_PATH="Dockerfile"
-[[ ! -z "$DOCKER_REPO" ]]               || DOCKER_REPO="mageops/magento-run-tests"
-[[ ! -z "$DOCKER_REPO_LEGACY" ]]        || DOCKER_REPO_LEGACY="magesuite/run-tests"
-[[ ! -z "$DOCKER_TAG" ]]                || DOCKER_TAG="latest"
-[[ ! -z "$IMAGE_NAME" ]]                || IMAGE_NAME="${DOCKER_REPO}:${DOCKER_TAG}"
+DOCKERFILE_PATH="${DOCKERFILE_PATH:-Dockerfile}"
+DOCKER_REPO="${DOCKER_REPO:-mageops/magento-run-tests}"
+DOCKER_REPO_LEGACY="${DOCKER_REPO_LEGACY:-magesuite/run-tests}"
+DOCKER_TAG="${DOCKER_TA:-latest}"
+IMAGE_NAME="${IMAGE_NAME:-${DOCKER_REPO}:${DOCKER_TAG}}"
 
-[[ ! -z "$SOURCE_COMMIT" ]]             || SOURCE_COMMIT="$(git rev-parse --short HEAD)"
-[[ ! -z "$SOURCE_BRANCH" ]]             || SOURCE_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
-[[ ! -z "$COMMIT_MSG" ]]                || COMMIT_MSG="$(git log -1 --pretty=%B)"
+SOURCE_COMMIT="${SOURCE_COMMIT:-$(git rev-parse --short HEAD)}"
+SOURCE_BRANCH="${SOURCE_BRANCH:-$(git rev-parse --abbrev-ref HEAD)}"
+COMMIT_MSG="${COMMIT_MSG:-$(git log -1 --pretty=%B)}"
 
-[[ ! -z "$DOCKER_BUILD_CACHE_FROM" ]]   || DOCKER_BUILD_CACHE_FROM="${DOCKER_REPO}:latest"
+DOCKER_BUILD_CACHE_FROM="${DOCKER_BUILD_CACHE_FROM:-${DOCKER_REPO}:latest}"
 
-DOCKER_BUILD_ARGS="$DOCKER_BUILD_ARGS \
+DOCKER_BUILD_ARGS="${DOCKER_BUILD_ARGS:-\
     --label VCS_COMMIT=${SOURCE_COMMIT} \
     --label VCS_BRANCH=${SOURCE_BRANCH}
-"
+}"
 
 if [[ ! -z "$DOCKER_BUILD_CACHE_FROM" ]] ; then
     DOCKER_BUILD_ARGS="$DOCKER_BUILD_ARGS --cache-from ${DOCKER_BUILD_CACHE_FROM}"
