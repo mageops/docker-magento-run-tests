@@ -5,7 +5,7 @@
 
 *Use `stable` or `-stable` suffixed docker tags (are built from `vX.Y` git tags), others may be unstable.*
 
-Please see the docker hub repo page [magesuite/run-tests](https://hub.docker.com/r/magesuite/run-tests).
+Please see the docker hub repo page [mageops/magento-run-tests](https://hub.docker.com/r/mageops/magento-run-tests).
 
 ## Docker tags and software versions
 
@@ -13,7 +13,7 @@ The `master` branch uses Maria DB 10.2, Elasticsearch 6 and PHP 7.2 which are th
 
 Other versions will be avaialble on appropriately named branches / docker tags.
 
-See [all tags on Docker Hub](https://hub.docker.com/r/magesuite/run-tests/tags).
+See [all tags on Docker Hub](https://hub.docker.com/r/mageops/magento-run-tests/tags).
 
 ## Tag suffixes
 
@@ -56,7 +56,7 @@ docker run \
     --tmpfs /var/www/html/var:rw,mode=777 \
     --tmpfs /var/www/html/dev/tests/integration/tmp:rw,mode=777 \
     --volume "$(pwd):/var/www/html" \
-    "magesuite/run-tests:php72-es6-mariadb102-stable"
+    "mageops/magento-run-tests:php72-es6-mariadb102-stable"
 ```
 
 ### Wait until healthcheck is green
@@ -105,7 +105,7 @@ docker run \
     --tmpfs /var/www/html/var:rw,mode=777 \
     --tmpfs /var/www/html/dev/tests/integration/tmp:rw,mode=777 \
     --volume "$(pwd):/var/www/html" \
-    "magesuite/run-tests:php72-es6-mariadb102-stable" \
+    "mageops/magento-run-tests:php72-es6-mariadb102-stable" \
     "/usr/bin/elasticsearch-server" \
     "/usr/bin/mysql-server" \
     "/usr/bin/mgs-run-tests ci creativestyle $(id -u) $(id -g)"
@@ -124,7 +124,7 @@ docker run \
     --tmpfs /var/www/html/var:rw,mode=777 \
     --tmpfs /var/www/html/dev/tests/integration/tmp:rw,mode=777 \
     --volume "$(pwd):/var/www/html" \
-    "magesuite/run-tests:php72-es6-mariadb102-stable" \
+    "mageops/magento-run-tests:php72-es6-mariadb102-stable" \
     "/bin/bash"
 ```
 
