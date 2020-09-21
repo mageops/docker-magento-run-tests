@@ -79,7 +79,8 @@ ENV COMPOSER_HOME="/opt/composer"
 
 RUN mkdir /opt/composer \
   && curl getcomposer.org/installer -o /tmp/composer-setup \
-  && php -r "if (hash_file('sha384', '/tmp/composer-setup') !== 'e0012edf3e80b6978849f5eff0d4b4e4c79ff1609dd1e613307e16318854d24ae64f26d17af3ef0bf7cfb710ca74755a') { exit(1); }" \
+  && COMPOSER_CHECKSUM="$(curl -fs https://composer.github.io/installer.sig)" \
+  && php -r "if (hash_file('sha384', '/tmp/composer-setup') !== '${COMPOSER_CHECKSUM}') { exit(1); }" \
   && php /tmp/composer-setup --install-dir=/usr/bin --filename=composer \
   && rm /tmp/composer-setup \
   && composer global config bin-dir /usr/bin \
