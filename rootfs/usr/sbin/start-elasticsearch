@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+set -e
+
+ELASTICSEARCH_USER=${ELASTICSEARCH_USER:-elasticsearch}
+ELASTICSEARCH_GROUP=${ELASTICSEARCH_GROUP:-elasticsearch}
+
+set -a
+source /etc/sysconfig/elasticsearch || true
+ES_HOME=/usr/share/elasticsearch
+CONF_DIR=/etc/elasticsearch
+DATA_DIR=/var/lib/elasticsearch
+LOG_DIR=/var/log/elasticsearch
+set +a
+
+cd /usr/share/elasticsearch
+
+chown -R "${ELASTICSEARCH_USER}:${ELASTICSEARCH_GROUP}" "$DATA_DIR" "$LOG_DIR"
+
+exec runuser -p -u "${ELASTICSEARCH_USER}" -g "${ELASTICSEARCH_GROUP}" /usr/share/elasticsearch/bin/elasticsearch -- \
+    -Edefault.path.logs=${LOG_DIR} \
+    -Edefault.path.data=${DATA_DIR} \
+    -Edefault.path.conf=${CONF_DIR}

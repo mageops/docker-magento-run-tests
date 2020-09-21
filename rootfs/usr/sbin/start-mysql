@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -e
+
+MYSQL_USER="${MYSQL_USER:-mysql}"
+MYSQL_GROUP="${MYSQL_GROUP:-mysql}"
+
+DATA_DIR=/var/lib/mysql
+
+if ! [ -e "$DATA_DIR/mysql" ];then
+    mysql_install_db --basedir=/usr --datadir="${DATA_DIR}" --user=${MYSQL_USER}
+fi
+
+chown -R "${MYSQL_USER}:${MYSQL_GROUP}" "${DATA_DIR}"
+exec runuser -p -u "${MYSQL_USER}" -g "${MYSQL_GROUP}" /usr/sbin/mysqld -- \
+    --basedir=/usr \
+    --datadir="${DATA_DIR}"

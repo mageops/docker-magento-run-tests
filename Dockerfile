@@ -47,21 +47,14 @@ RUN rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch \
  && yum -y install \
            "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-${ELASTICSEARCH_VERSION}.rpm" \
  && /usr/share/elasticsearch/bin/elasticsearch-plugin install analysis-phonetic \
- && /usr/share/elasticsearch/bin/elasticsearch-plugin install analysis-icu \
- && mkdir -p /var/log/elasticsearch /var/lib/elasticsearch \
- && chown elasticsearch:elasticsearch /var/log/elasticsearch /var/lib/elasticsearch \
- && echo -e "#!/bin/bash \n set -e -x \n /usr/bin/mgs-fix-perms \n chown elasticsearch:elasticsearch /var/lib/elasticsearch \n sudo -E -u elasticsearch -g elasticsearch /usr/share/elasticsearch/bin/elasticsearch" > /usr/bin/elasticsearch-server
+ && /usr/share/elasticsearch/bin/elasticsearch-plugin install analysis-icu
 
 ARG MARIADB_VERSION="10.2"
 ENV MARIADB_VERSION="${MARIADB_VERSION}"
 
 RUN rpm --import https://yum.mariadb.org/RPM-GPG-KEY-MariaDB \
  && echo -e "[mariadb]\nname = MariaDB\nbaseurl = http://yum.mariadb.org/${MARIADB_VERSION}/centos7-amd64\ngpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB\ngpgcheck=1\nenabled=1" > /etc/yum.repos.d/MariaDB.repo \
- && yum -y install MariaDB-server MariaDB-client \
- && mkdir -p /var/lib/mysql /var/log/mysql \
- && chown mysql:mysql /var/lib/mysql /var/log/mysql \
- && echo -e "#!/bin/bash \n set -e -x \n /usr/bin/mgs-fix-perms \n chown mysql:mysql /var/lib/mysql \n mysql_install_db --basedir=/usr --datadir=/var/lib/mysql --user=mysql \n sudo -E -u mysql -g mysql /usr/sbin/mysqld" > /usr/bin/mysql-server \
- && chmod +x /usr/bin/mysql-server
+ && yum -y install MariaDB-server MariaDB-client
 
 ARG PHP_VERSION="72"
 ENV PHP_VERSION="${PHP_VERSION}"
@@ -89,7 +82,7 @@ RUN mkdir /opt/composer \
   && chmod +x /sbin/multirun \
   && mkdir -p /var/www/html \
   && echo -e "#!/bin/bash \n set -e -x \n curl -sf localhost:9200 2>&1 > /dev/null && mysqladmin ping 2>&1 > /dev/null" > /usr/bin/healthcheck \
-  && chmod +x /usr/bin/{elasticsearch-server,healthcheck}
+  && chmod +x /usr/bin/healthcheck
 
 COPY /rootfs /
 
@@ -115,6 +108,6 @@ EXPOSE 22 80 3306 9200
 
 ENTRYPOINT ["/sbin/multirun"]
 
-CMD ["/usr/bin/elasticsearch-server", "/usr/bin/mysql-server"]
+CMD ["/usr/sbin/start-elasticsearch", "/usr/sbin/start-mysql"]
 
 HEALTHCHECK --timeout=10s --interval=10s --start-period=10s CMD /usr/bin/healthcheck
