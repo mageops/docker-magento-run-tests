@@ -23,12 +23,13 @@ See [all tags on Docker Hub](https://hub.docker.com/r/mageops/magento-run-tests/
 ## Plain tags
 
 - `latest` - master branch tip
-- `stable` - latest tag named `vX.Y` 
+- `stable` - latest tag named `vX.Y`
 
-## Notable versions 
+## Notable versions
 
 | Version                   | Docker tag                    | PHP   | DB            | Elasticsearch |
 | ------------------------- | ----------------------------- | ----: | ------------: | ------------: |
+| **php71-es5-mariadb102**  | _php71-es5-mariadb102-stable_ | 7.1.X | MariaDB 10.2  | 5.X           |
 | **php71-es6-mariadb102**  | _php71-es6-mariadb102-stable_ | 7.1.X | MariaDB 10.2  | 6.X           |
 | **php72-es6-mariadb102**  | _php72-es6-mariadb102-stable_ | 7.2.X | MariaDB 10.2  | 6.X           |
 | **php73-es6-mariadb102**  | _php73-es6-mariadb102-stable_ | 7.3.X | MariaDB 10.2  | 6.X           |
@@ -36,7 +37,7 @@ See [all tags on Docker Hub](https://hub.docker.com/r/mageops/magento-run-tests/
 | **php72-es7-mariadb103**  | _php72-es7-mariadb103-stable_ | 7.2.X | MariaDB 10.3  | 7.X           |
 | **php73-es7-mariadb104**  | _php73-es7-mariadb104-stable_ | 7.3.X | MariaDB 10.4  | 7.X           |
 
- 
+
 _Note: The `exec` mount opt on `/tmp` is needed for elasticsearch because it maps mem to temp files._
 _The image is big and there's not really a way around it since it has a lot of software and is based on CentOS (which we use for local dev / production deployments, so we want to keep everything else close)._
 
@@ -64,7 +65,7 @@ docker run \
 ```bash
 while [[ "$(docker inspect --format='{{json .State.Health.Status}}' mgs-test)" == '"starting"' ]] ; do sleep 1s && echo "Waiting for start"; done
 ```
-    
+
 ### Then later execute your test suite
 
 ```bash
@@ -92,7 +93,7 @@ docker exec -it mgs-test /bin/bash
 
 ## Run everthing at once
 
-As an alternative you could run everything at once as the 
+As an alternative you could run everything at once as the
 tests will wait for healthcheck to become green before proceeding:
 
 ```bash
