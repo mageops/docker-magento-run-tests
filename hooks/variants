@@ -1,5 +1,5 @@
 
-set -xeuo pipefail 
+set -xeuo pipefail
 
 DOCKERFILE_PATH="${DOCKERFILE_PATH:-Dockerfile}"
 DOCKER_REPO="${DOCKER_REPO:-mageops/magento-run-tests}"
@@ -24,6 +24,7 @@ fi
 
 IMAGE_VARIANTS=(
     'VARIANT_NAME="php71-es6-mariadb102" ; PHP_VERSION="71" ; ELASTICSEARCH_VERSION="6.8.1"        ; MARIADB_VERSION="10.2" ;'
+    'VARIANT_NAME="php71-es5-mariadb102" ; PHP_VERSION="71" ; ELASTICSEARCH_VERSION="5.6.16"       ; MARIADB_VERSION="10.2" ;'
     'VARIANT_NAME="php72-es6-mariadb102" ; PHP_VERSION="72" ; ELASTICSEARCH_VERSION="6.8.1"        ; MARIADB_VERSION="10.2" ;'
     'VARIANT_NAME="php73-es6-mariadb102" ; PHP_VERSION="73" ; ELASTICSEARCH_VERSION="6.8.1"        ; MARIADB_VERSION="10.2" ;'
     'VARIANT_NAME="php71-es7-mariadb103" ; PHP_VERSION="71" ; ELASTICSEARCH_VERSION="7.2.0-x86_64" ; MARIADB_VERSION="10.3" ;'
@@ -73,8 +74,6 @@ function push_variants() {
         eval "$VARIANT_DATA";
         docker_push "$(variant_image_name ${VARIANT_NAME})"
         docker tag "$(variant_image_name ${VARIANT_NAME})" "$(variant_image_name_legacy ${VARIANT_NAME})"
-        docker_push "$(variant_image_name_legacy ${VARIANT_NAME})"
+        docker_push "$(variant_image_name_legacy ${VARIANT_NAME})" || echo "Failed to push legacy image, ignoring"
     done
 }
-
-
