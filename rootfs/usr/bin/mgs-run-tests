@@ -7,31 +7,39 @@ CHANGE_GID="$4"
 
 echo "$@"
 
-until /usr/bin/healthcheck ; do
-    sleep 2s
-    echo "Waiting for services to come up..."
-done
+set -e
 
-if [[ $# -ne 2 ]] && [[ $# -ne 4 ]]; then
-    echo "Usage: $0 [env] [testsuite] <uid> <gid>"
-    exit 20
-fi
+function bootstrap() {
+    until /usr/bin/healthcheck ; do
+        sleep 2s
+        echo "Waiting for services to come up..."
+    done
 
-if [[ ! -z "$CHANGE_UID" ]] && [[ ! -z "$CHANGE_GID" ]] ; then
-    if [[ $EUID -ne 0 ]]; then
-        echo "Switching UID/GID is only possible from root user!" >&2
-        exit 2
+    if [[ $# -ne 2 ]] && [[ $# -ne 4 ]]; then
+        echo "Usage: $0 [env] [testsuite] <uid> <gid>"
+        exit 20
     fi
 
-    echo "Starting sudo subshell with UID:$CHANGE_UID GID:$CHANGE_GID..."
+    if [[ ! -z "$CHANGE_UID" ]] && [[ ! -z "$CHANGE_GID" ]] ; then
+        if [[ $EUID -ne 0 ]]; then
+            echo "Switching UID/GID is only possible from root user!" >&2
+            exit 2
+        fi
 
-    clean
-    mgs-switch-uid-gid "$CHANGE_UID" "$CHANGE_GID" $0 "$ENVNAME" "$TESTSUITE"
+        clean
+        set_permissions
 
-    exit 0
-fi
+        echo "Starting sudo subshell with UID:$CHANGE_UID GID:$CHANGE_GID..."
+        mgs-switch-uid-gid "$CHANGE_UID" "$CHANGE_GID" $0 "$ENVNAME" "$TESTSUITE"
 
-set -e
+        exit 0
+    fi
+}
+
+function set_permissions() {
+    echo "Setting permissions..."
+    chmod -R 777 /var/www/html/{generated,var,dev/tests/integration/tmp}
+}
 
 function prepare_mysql() {
     echo "Preparing mysql..."
@@ -55,7 +63,6 @@ function clean() {
         /var/www/html/generated/* \
         /var/www/html/var/* \
         /var/www/html/dev/tests/integration/tmp/*
-    chmod -R 777 /var/www/html/{generated,var,dev/tests/integration/tmp}
 }
 
 function run_unit() {
@@ -70,6 +77,7 @@ function run_integration() {
     phing tests:integration -Denvname=${ENVNAME} -Dtestsuite=${TESTSUITE}
 }
 
+bootstrap "$@"
 prepare_mysql
 
 run_unit
