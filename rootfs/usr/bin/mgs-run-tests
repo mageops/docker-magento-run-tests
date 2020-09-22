@@ -25,7 +25,7 @@ if [[ ! -z "$CHANGE_UID" ]] && [[ ! -z "$CHANGE_GID" ]] ; then
 
     echo "Starting sudo subshell with UID:$CHANGE_UID GID:$CHANGE_GID..."
 
-    mgs-fix-perms
+    clean
     mgs-switch-uid-gid "$CHANGE_UID" "$CHANGE_GID" $0 "$ENVNAME" "$TESTSUITE"
 
     exit 0
@@ -55,19 +55,18 @@ function clean() {
         /var/www/html/generated/* \
         /var/www/html/var/* \
         /var/www/html/dev/tests/integration/tmp/*
+    chmod -R 777 /var/www/html/{generated,var,dev/tests/integration/tmp}
 }
 
 function run_unit() {
     echo "Starting unit tests..."
     clean
-    mgs-fix-perms
     phing tests:unit -Denvname=${ENVNAME} -Dtestsuite=${TESTSUITE}
 }
 
 function run_integration() {
     echo "Starting integration tests..."
     clean
-    mgs-fix-perms
     phing tests:integration -Denvname=${ENVNAME} -Dtestsuite=${TESTSUITE}
 }
 

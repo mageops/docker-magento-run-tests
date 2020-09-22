@@ -1,5 +1,0 @@
-#!/bin/bash
-
-set -e -x
-
-chmod 777 /tmp /var/www/html/{generated,var,dev/tests/integration/tmp}
