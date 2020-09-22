@@ -132,6 +132,6 @@ docker run \
 You can start the services while inside by doing:
 
 ```bash
-/usr/bin/elasticsearch-server &
-/usr/bin/mysql-server &
+/usr/sbin/start-elasticsearch &
+/usr/sbin/start-mysql &
 ```
