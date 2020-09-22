@@ -34,19 +34,19 @@ fi
 set -e
 
 function prepare_mysql() {
+    echo "Preparing mysql..."
+    cat <<ENDSQL | mysql -uroot
+        DROP USER IF EXISTS '${DB_USER}'@'localhost';
+        DROP USER IF EXISTS '${DB_USER}'@'%';
 
-cat <<ENDSQL | mysql -uroot
-     DROP USER IF EXISTS '${DB_USER}'@'localhost';
-     DROP USER IF EXISTS '${DB_USER}'@'%';
+        CREATE USER '${DB_USER}'@'localhost' IDENTIFIED BY '${DB_PASS}';
+        CREATE USER '${DB_USER}'@'%' IDENTIFIED BY '${DB_PASS}';
+        GRANT ALL PRIVILEGES ON *.* TO '${DB_USER}'@'localhost' WITH GRANT OPTION;
+        GRANT PROXY ON '${DB_USER}'@'%' TO '${DB_USER}'@'localhost' WITH GRANT OPTION;
 
-     CREATE USER '${DB_USER}'@'localhost' IDENTIFIED BY '${DB_PASS}';
-     CREATE USER '${DB_USER}'@'%' IDENTIFIED BY '${DB_PASS}';
-     GRANT ALL PRIVILEGES ON *.* TO '${DB_USER}'@'localhost' WITH GRANT OPTION;
-     GRANT PROXY ON '${DB_USER}'@'%' TO '${DB_USER}'@'localhost' WITH GRANT OPTION;
+        FLUSH PRIVILEGES;
 
-     FLUSH PRIVILEGES;
-
-     CREATE DATABASE IF NOT EXISTS ${DB_NAME};
+        CREATE DATABASE IF NOT EXISTS ${DB_NAME};
 ENDSQL
 }
 
@@ -58,12 +58,16 @@ function clean() {
 }
 
 function run_unit() {
+    echo "Starting unit tests..."
     clean
+    mgs-fix-perms
     phing tests:unit -Denvname=${ENVNAME} -Dtestsuite=${TESTSUITE}
 }
 
 function run_integration() {
+    echo "Starting integration tests..."
     clean
+    mgs-fix-perms
     phing tests:integration -Denvname=${ENVNAME} -Dtestsuite=${TESTSUITE}
 }
 
