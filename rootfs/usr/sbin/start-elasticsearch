@@ -16,7 +16,11 @@ cd /usr/share/elasticsearch
 
 chown -R "${ELASTICSEARCH_USER}:${ELASTICSEARCH_GROUP}" "$DATA_DIR" "$LOG_DIR"
 
-exec runuser -p -u "${ELASTICSEARCH_USER}" -g "${ELASTICSEARCH_GROUP}" /usr/share/elasticsearch/bin/elasticsearch -- \
-    -Edefault.path.logs=${LOG_DIR} \
-    -Edefault.path.data=${DATA_DIR} \
-    -Edefault.path.conf=${CONF_DIR}
+if [[ $ELASTICSEARCH_VERSION == 5.* ]];then
+    exec runuser -p -u "${ELASTICSEARCH_USER}" -g "${ELASTICSEARCH_GROUP}" /usr/share/elasticsearch/bin/elasticsearch -- \
+        -Edefault.path.logs=${LOG_DIR} \
+        -Edefault.path.data=${DATA_DIR} \
+        -Edefault.path.conf=${CONF_DIR}
+else
+    exec runuser -p -u "${ELASTICSEARCH_USER}" -g "${ELASTICSEARCH_GROUP}" /usr/share/elasticsearch/bin/elasticsearch --
+fi
