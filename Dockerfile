@@ -83,7 +83,7 @@ RUN mkdir /opt/composer \
   && curl getcomposer.org/installer -o /tmp/composer-setup \
   && COMPOSER_CHECKSUM="$(curl -fs https://composer.github.io/installer.sig)" \
   && php -r "if (hash_file('sha384', '/tmp/composer-setup') !== '${COMPOSER_CHECKSUM}') { exit(1); }" \
-  && php /tmp/composer-setup --install-dir=/usr/bin --filename=composer \
+  && php /tmp/composer-setup --1 --install-dir=/usr/bin --filename=composer \
   && rm /tmp/composer-setup \
   && composer global config bin-dir /usr/bin \
   && composer global require phing/phing hirak/prestissimo \
