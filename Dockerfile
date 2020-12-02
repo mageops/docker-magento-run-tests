@@ -113,8 +113,10 @@ WORKDIR /var/www/html
 
 EXPOSE 22 80 3306 9200
 
+ENV CONTAINER_TIMEOUT=1h
+
 ENTRYPOINT ["/sbin/multirun"]
 
-CMD ["/usr/sbin/start-elasticsearch", "/usr/sbin/start-mysql"]
+CMD ["/usr/sbin/start-elasticsearch", "/usr/sbin/start-mysql", "/usr/bin/container-timeout"]
 
 HEALTHCHECK --timeout=10s --interval=10s --start-period=10s CMD /usr/bin/healthcheck

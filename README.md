@@ -7,6 +7,11 @@
 
 Please see the docker hub repo page [mageops/magento-run-tests](https://hub.docker.com/r/mageops/magento-run-tests).
 
+# Container timeout
+Container will by default exit after 1h to prevent dangling container in CI environments,
+you can adjust this behavior by changing setting different `CONTAINER_TIMEOUT` environment variable.
+Setting `CONTAINER_TIMEOUT` to `no` will disable that behavior completely.
+
 ## Docker tags and software versions
 
 The `master` branch uses Maria DB 10.2, Elasticsearch 6 and PHP 7.2 which are the latest versions supported by Magento.

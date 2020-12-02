@@ -1,0 +1,14 @@
+#!/bin/bash
+
+set -auo pipefail
+
+if [ "${CONTAINER_TIMEOUT:-}" == "no" ];then
+    echo "Container timeout disabled"
+    while true;do
+        sleep 1h
+    done
+fi
+
+sleep "${CONTAINER_TIMEOUT:-1h}"
+echo "Container timeout reached, exiting"
+exit 1
