@@ -37,6 +37,9 @@ function bootstrap() {
 }
 
 function set_permissions() {
+    echo "Clearing password for MySQL root user..."
+    echo "ALTER USER 'root'@'localhost' IDENTIFIED BY '' ; FLUSH PRIVILEGES ;" | mysql -uroot
+
     echo "Setting permissions..."
     chmod -R 777 /var/www/html/{generated,var,dev/tests/integration/tmp}
 }
