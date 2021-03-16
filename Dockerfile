@@ -41,6 +41,11 @@ RUN sed -i 's/^\(override_install_langs.*\)$/#\1/' /etc/yum.conf \
            libzip5 \
            fribidi \
            graphviz \
+           pngquant \
+           libjpeg-turbo \
+           optipng \
+           gifsicle \
+           jpegoptim \
   && yum clean all
 
 ARG ELASTICSEARCH_VERSION="6.8.1"
