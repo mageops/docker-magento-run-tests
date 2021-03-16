@@ -71,10 +71,11 @@ RUN rpm --import https://rpms.remirepo.net/RPM-GPG-KEY-remi \
  && yum -y install https://rpms.remirepo.net/enterprise/remi-release-7.rpm \
  && yum-config-manager --enable "remi-php${PHP_VERSION}" \
  && yum -y install \
-            php php-gd php-pdo \
+            php php-gd php-pdo php-sodium php-json php-mysqlnd \
             php-soap php-xmlrpc php-xml php-intl php-mcrypt \
-            php-mysql php-mbstring php-zip php-imagick php-bcmath \
-            php-opcache php-imagick php-curl php-pecl-apcu php-gmp \
+            php-mysql php-mbstring php-zip php-bcmath \
+            php-opcache php-imagick php-curl php-gmp \
+            php-pecl-apcu-bc php-pecl-redis php-pecl-zip \
   && yum clean all
 
 ENV COMPOSER_HOME="/opt/composer"
