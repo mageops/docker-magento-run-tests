@@ -54,7 +54,7 @@ ENV ELASTICSEARCH_VERSION="${ELASTICSEARCH_VERSION}" \
 
 RUN rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch \
  && yum -y install \
-           "https://artifacts.elastic.co/downloads/elasticsearch/ ${ELASTICSEARCH_VERSION}.rpm" \
+           "https://artifacts.elastic.co/downloads/elasticsearch/${ELASTICSEARCH_VERSION}.rpm" \
  && /usr/share/elasticsearch/bin/elasticsearch-plugin install analysis-phonetic \
  && /usr/share/elasticsearch/bin/elasticsearch-plugin install analysis-icu \
  && rm -rf /var/tmp/* /usr/share/elasticsearch/modules/x-pack-ml/platform/{darwin,windows}-* \
