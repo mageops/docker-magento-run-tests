@@ -94,7 +94,7 @@ RUN mkdir /opt/composer \
   && php /tmp/composer-setup "--${COMPOSER_VERSION}" --install-dir=/usr/bin --filename=composer \
   && rm /tmp/composer-setup \
   && composer global config bin-dir /usr/bin \
-  && composer global require phing/phing hirak/prestissimo \
+  && if [ "$COMPOSER_VERSION" = "1" ];then composer global require phing/phing hirak/prestissimo; fi \
   && curl -L https://github.com/nicolas-van/multirun/releases/download/0.3.2/multirun-glibc-0.3.2.tar.gz | tar -xz -C /sbin \
   && chmod +x /sbin/multirun \
   && mkdir -p /var/www/html \
