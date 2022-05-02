@@ -42,6 +42,8 @@ See [all tags on Docker Hub](https://hub.docker.com/r/mageops/magento-run-tests/
 | **php72-es7-mariadb103**  | _php72-es7-mariadb103-stable_ | 7.2.X | MariaDB 10.3  | 7.X           |
 | **php73-es7-mariadb104**  | _php73-es7-mariadb104-stable_ | 7.3.X | MariaDB 10.4  | 7.X           |
 | **php74-es7-mariadb104**  | _php74-es7-mariadb104-stable_ | 7.4.X | MariaDB 10.4  | 7.X           |
+| **php80-es7-mariadb108**  | _php80-es7-mariadb108-stable_ | 8.0.X | MariaDB 10.8  | 7.X           |
+| **php81-es7-mariadb108**  | _php81-es7-mariadb108-stable_ | 8.1.X | MariaDB 10.8  | 7.X           |
 
 
 _Note: The `exec` mount opt on `/tmp` is needed for elasticsearch because it maps mem to temp files._

@@ -48,19 +48,19 @@ RUN sed -i 's/^\(override_install_langs.*\)$/#\1/' /etc/yum.conf \
            jpegoptim \
   && yum clean all
 
-ARG ELASTICSEARCH_VERSION="6.8.1"
+ARG ELASTICSEARCH_VERSION="7.17.3"
 ENV ELASTICSEARCH_VERSION="${ELASTICSEARCH_VERSION}" \
     ES_JAVA_OPTS="-Xms128m -Xmx128m"
 
 RUN rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch \
  && yum -y install \
-           "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-${ELASTICSEARCH_VERSION}.rpm" \
+           "https://artifacts.elastic.co/downloads/elasticsearch/ ${ELASTICSEARCH_VERSION}.rpm" \
  && /usr/share/elasticsearch/bin/elasticsearch-plugin install analysis-phonetic \
  && /usr/share/elasticsearch/bin/elasticsearch-plugin install analysis-icu \
  && rm -rf /var/tmp/* /usr/share/elasticsearch/modules/x-pack-ml/platform/{darwin,windows}-* \
  && yum clean all
 
-ARG MARIADB_VERSION="10.2"
+ARG MARIADB_VERSION="10.8"
 ENV MARIADB_VERSION="${MARIADB_VERSION}"
 
 RUN rpm --import https://yum.mariadb.org/RPM-GPG-KEY-MariaDB \
@@ -69,7 +69,7 @@ RUN rpm --import https://yum.mariadb.org/RPM-GPG-KEY-MariaDB \
  && rm -rf /var/lib/mysql/ib_logfile* \
  && yum clean all
 
-ARG PHP_VERSION="72"
+ARG PHP_VERSION="74"
 ENV PHP_VERSION="${PHP_VERSION}"
 
 RUN rpm --import https://rpms.remirepo.net/RPM-GPG-KEY-remi \
