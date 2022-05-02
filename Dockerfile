@@ -48,7 +48,7 @@ RUN sed -i 's/^\(override_install_langs.*\)$/#\1/' /etc/yum.conf \
            jpegoptim \
   && yum clean all
 
-ARG ELASTICSEARCH_VERSION="7.17.3"
+ARG ELASTICSEARCH_VERSION="7.17.3-x86_64"
 ENV ELASTICSEARCH_VERSION="${ELASTICSEARCH_VERSION}" \
     ES_JAVA_OPTS="-Xms128m -Xmx128m"
 

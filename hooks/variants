@@ -68,7 +68,11 @@ function build_main() {
 function build_variants() {
     for VARIANT_DATA in "${IMAGE_VARIANTS[@]}" ; do
         eval "$VARIANT_DATA";
-        build_parametrized "$VARIANT_NAME" --build-arg PHP_VERSION="$PHP_VERSION" --build-arg ELASTICSEARCH_VERSION="$ELASTICSEARCH_VERSION" --build-arg MARIADB_VERSION="$MARIADB_VERSION"
+        build_parametrized "$VARIANT_NAME" \
+            --build-arg PHP_VERSION="$PHP_VERSION" \
+            --build-arg ELASTICSEARCH_VERSION="$ELASTICSEARCH_VERSION" \
+            --build-arg MARIADB_VERSION="$MARIADB_VERSION" \
+            --build-arg COMPOSER_VERSION="$COMPOSER_VERSION"
     done
 }
 
