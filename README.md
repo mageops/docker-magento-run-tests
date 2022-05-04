@@ -33,7 +33,7 @@ See [all tags on Docker Hub](https://hub.docker.com/r/mageops/magento-run-tests/
 ## Notable versions
 
 | Version                   | Docker tag                    | PHP   | DB            | Elasticsearch | Composer version |
-| ------------------------- | ----------------------------- | ----: | ------------: | ------------: | 1                |
+| ------------------------- | ----------------------------- | ----: | ------------: | ------------: | ---------------: |
 | **php71-es5-mariadb102**  | _php71-es5-mariadb102-stable_ | 7.1.X | MariaDB 10.2  | 5.X           | 1                |
 | **php71-es6-mariadb102**  | _php71-es6-mariadb102-stable_ | 7.1.X | MariaDB 10.2  | 6.X           | 1                |
 | **php72-es6-mariadb102**  | _php72-es6-mariadb102-stable_ | 7.2.X | MariaDB 10.2  | 6.X           | 1                |
