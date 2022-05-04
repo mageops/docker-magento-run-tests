@@ -1,11 +1,11 @@
 
-[![Docker Hub Build Status](https://img.shields.io/docker/cloud/build/mageops/magento-run-tests?label=Docker+Image+Build)](https://hub.docker.com/r/mageops/magento-run-tests/builds)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/mageops/docker-magento-run-tests/Publish%20docker%20container%20to%20docker%20hub)
 
 # MageSuite Docker Container For Running Magento Tests
 
 *Use `stable` or `-stable` suffixed docker tags (are built from `vX.Y` git tags), others may be unstable.*
 
-Please see the docker hub repo page [mageops/magento-run-tests](https://hub.docker.com/r/mageops/magento-run-tests).
+Please see the GitHub Packages [mageops/magento-run-tests](https://github.com/mageops/docker-magento-run-tests/pkgs/container/magento-run-tests).
 
 # Container timeout
 Container will by default exit after 1h to prevent dangling container in CI environments,
@@ -18,7 +18,7 @@ The `master` branch uses Maria DB 10.2, Elasticsearch 6 and PHP 7.2 which are th
 
 Other versions will be avaialble on appropriately named branches / docker tags.
 
-See [all tags on Docker Hub](https://hub.docker.com/r/mageops/magento-run-tests/tags).
+See [all tags](https://github.com/mageops/docker-magento-run-tests/pkgs/container/magento-run-tests/versions).
 
 ## Tag suffixes
 
@@ -65,7 +65,7 @@ docker run \
     --tmpfs /var/www/html/var:rw,mode=777 \
     --tmpfs /var/www/html/dev/tests/integration/tmp:rw,mode=777 \
     --volume "$(pwd):/var/www/html" \
-    "mageops/magento-run-tests:php72-es6-mariadb102-stable"
+    "ghcr.io/mageops/magento-run-tests:php72-es6-mariadb102-stable"
 ```
 
 ### Wait until healthcheck is green
@@ -114,7 +114,7 @@ docker run \
     --tmpfs /var/www/html/var:rw,mode=777 \
     --tmpfs /var/www/html/dev/tests/integration/tmp:rw,mode=777 \
     --volume "$(pwd):/var/www/html" \
-    "mageops/magento-run-tests:php72-es6-mariadb102-stable" \
+    "ghcr.io/mageops/magento-run-tests:php72-es6-mariadb102-stable" \
     "/usr/bin/elasticsearch-server" \
     "/usr/bin/mysql-server" \
     "/usr/bin/mgs-run-tests ci creativestyle $(id -u) $(id -g)"
@@ -133,7 +133,7 @@ docker run \
     --tmpfs /var/www/html/var:rw,mode=777 \
     --tmpfs /var/www/html/dev/tests/integration/tmp:rw,mode=777 \
     --volume "$(pwd):/var/www/html" \
-    "mageops/magento-run-tests:php72-es6-mariadb102-stable" \
+    "ghcr.io/mageops/magento-run-tests:php72-es6-mariadb102-stable" \
     "/bin/bash"
 ```
 
