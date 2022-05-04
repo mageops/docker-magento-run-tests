@@ -11,6 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+    - name: Set output
+      id: vars
+      run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
     - name: Login to Docker Hub
       uses: docker/login-action@v1
       with:
@@ -22,5 +25,5 @@ jobs:
     - name: Publish the Docker image
       run: ./hooks/push
       env:
-        IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/magento-run-tests
+        IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/magento-run-tests:${{ steps.vars.outputs.tag }}
         DOCKER_REPO: ghcr.io/${{ github.repository_owner }}/magento-run-tests
