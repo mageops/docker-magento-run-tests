@@ -32,19 +32,17 @@ See [all tags](https://github.com/mageops/docker-magento-run-tests/pkgs/containe
 
 ## Notable versions
 
-| Version                   | Docker tag                    | PHP   | DB            | Elasticsearch | Composer version |
-| ------------------------- | ----------------------------- | ----: | ------------: | ------------: | ---------------: |
-| **php71-es5-mariadb102**  | _php71-es5-mariadb102-stable_ | 7.1.X | MariaDB 10.2  | 5.X           | 1                |
-| **php71-es6-mariadb102**  | _php71-es6-mariadb102-stable_ | 7.1.X | MariaDB 10.2  | 6.X           | 1                |
-| **php72-es6-mariadb102**  | _php72-es6-mariadb102-stable_ | 7.2.X | MariaDB 10.2  | 6.X           | 1                |
-| **php73-es6-mariadb102**  | _php73-es6-mariadb102-stable_ | 7.3.X | MariaDB 10.2  | 6.X           | 1                |
-| **php71-es7-mariadb103**  | _php71-es7-mariadb103-stable_ | 7.1.X | MariaDB 10.3  | 7.X           | 1                |
-| **php72-es7-mariadb103**  | _php72-es7-mariadb103-stable_ | 7.2.X | MariaDB 10.3  | 7.X           | 1                |
-| **php73-es7-mariadb104**  | _php73-es7-mariadb104-stable_ | 7.3.X | MariaDB 10.4  | 7.X           | 1                |
-| **php74-es7-mariadb104**  | _php74-es7-mariadb104-stable_ | 7.4.X | MariaDB 10.4  | 7.X           | 1                |
-| **php80-es7-mariadb108**  | _php80-es7-mariadb108-stable_ | 8.0.X | MariaDB 10.8  | 7.X           | 2                |
-| **php81-es7-mariadb108**  | _php81-es7-mariadb108-stable_ | 8.1.X | MariaDB 10.8  | 7.X           | 2                |
-
+| Version                   | Docker tag                     | PHP   | DB            | Elasticsearch | Composer version |
+| ------------------------- | ------------------------------ | ----: | ------------: | ------------: | ---------------: |
+| **php71-es7-mariadb103**  | _php71-es7-mariadb103-stable_  | 7.1.X | MariaDB 10.3  | 7.X           | 1                |
+| **php72-es7-mariadb103**  | _php72-es7-mariadb103-stable_  | 7.2.X | MariaDB 10.3  | 7.X           | 1                |
+| **php73-es7-mariadb104**  | _php73-es7-mariadb104-stable_  | 7.3.X | MariaDB 10.4  | 7.X           | 1                |
+| **php74-es7-mariadb104**  | _php74-es7-mariadb104-stable_  | 7.4.X | MariaDB 10.4  | 7.X           | 1                |
+| **php80-es7-mariadb104**  | _php80-es7-mariadb104-stable_  | 8.0.X | MariaDB 10.4  | 7.X           | 2                |
+| **php81-es7-mariadb104**  | _php81-es7-mariadb104-stable_  | 8.1.X | MariaDB 10.4  | 7.X           | 2                |
+| **php80-es7-mariadb108**  | _php80-es7-mariadb108-stable_  | 8.0.X | MariaDB 10.8  | 7.X           | 2                |
+| **php81-es7-mariadb108**  | _php81-es7-mariadb108-stable_  | 8.1.X | MariaDB 10.8  | 7.X           | 2                |
+| **php81-es7-mariadb1010** | _php81-es7-mariadb1010-stable_ | 8.1.X | MariaDB 10.10 | 7.X           | 2                |
 
 _Note: The `exec` mount opt on `/tmp` is needed for elasticsearch because it maps mem to temp files._
 _The image is big and there's not really a way around it since it has a lot of software and is based on CentOS (which we use for local dev / production deployments, so we want to keep everything else close)._
