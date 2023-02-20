@@ -5,6 +5,7 @@ FROM centos:centos7
 # glibc-common is reinstalled to restore some missing locales
 RUN sed -i 's/^\(override_install_langs.*\)$/#\1/' /etc/yum.conf \
   && ln -svf /usr/share/zoneinfo/UTC /etc/localtime \
+  && yum -y upgrade \
   && yum -y install epel-release \
   && yum -y reinstall glibc-common \
   && yum -y install \
@@ -60,14 +61,39 @@ RUN rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch \
  && rm -rf /var/tmp/* /usr/share/elasticsearch/modules/x-pack-ml/platform/{darwin,windows}-* \
  && yum clean all
 
+ARG MYSQL_FLAVOR="mariadb"
+ENV MYSQL_FLAVOR="${MYSQL_FLAVOR}"
+
 ARG MARIADB_VERSION="10.8"
 ENV MARIADB_VERSION="${MARIADB_VERSION}"
 
-RUN rpm --import https://yum.mariadb.org/RPM-GPG-KEY-MariaDB \
- && echo -e "[mariadb]\nname = MariaDB\nbaseurl = http://yum.mariadb.org/${MARIADB_VERSION}/centos7-amd64\ngpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB\ngpgcheck=1\nenabled=1" > /etc/yum.repos.d/MariaDB.repo \
- && yum -y install MariaDB-server MariaDB-client \
- && rm -rf /var/lib/mysql/ib_logfile* \
- && yum clean all
+ARG MYSQL_VERSION=""
+ENV MYSQL_VERSION="${MYSQL_VERSION}"
+
+RUN set -exuo pipefail ; \
+  if [ "$MYSQL_FLAVOR" = "mariadb" ];then \
+    rpm --import https://yum.mariadb.org/RPM-GPG-KEY-MariaDB \
+    && echo -e "[mariadb]\nname = MariaDB\nbaseurl = http://yum.mariadb.org/${MARIADB_VERSION}/centos7-amd64\ngpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB\ngpgcheck=1\nenabled=1" > /etc/yum.repos.d/MariaDB.repo \
+    && yum -y install MariaDB-server MariaDB-client \
+    && rm -rf /var/lib/mysql; \
+  elif [ "$MYSQL_FLAVOR" = "mysql" ];then \
+    if [ "$MYSQL_VERSION" = "8.0" ];then \
+      MYSQL_FILENAME=mysql80-community-release-el7-7.noarch.rpm; \
+      MYSQL_MD5=659400f9842fffb8d64ae0b650f081b9; \
+    else \
+      echo "Uknown mysql version"; \
+      exit 1; \
+    fi; \
+    curl -sLf "https://dev.mysql.com/get/$MYSQL_FILENAME" -o "$MYSQL_FILENAME" \
+    && echo "$MYSQL_MD5  $MYSQL_FILENAME" md5sum -c \
+    && yum install -y "$MYSQL_FILENAME" \
+    && rm "$MYSQL_FILENAME" \
+    && yum install -y mysql-server; \
+  else \
+    echo "Unknown MYSQL_FLAVOR=${MYSQL_FLAVOR}"; \
+    exit 1; \
+  fi; \
+  yum clean all
 
 ARG PHP_VERSION="74"
 ENV PHP_VERSION="${PHP_VERSION}"

@@ -6,11 +6,24 @@ MYSQL_GROUP="${MYSQL_GROUP:-mysql}"
 
 DATA_DIR=/var/lib/mysql
 
+
 if ! [ -e "$DATA_DIR/mysql" ];then
-    mysql_install_db --basedir=/usr --datadir="${DATA_DIR}" --user=${MYSQL_USER}
+    if [ "$MYSQL_FLAVOR" = "mariadb" ];then
+        /usr/bin/mysql_install_db --basedir=/usr --datadir="${DATA_DIR}" --user=${MYSQL_USER}
+    elif [ "$MYSQL_FLAVOR" = "mysql" ];then
+        /usr/sbin/mysqld --initialize-insecure --datadir="${DATA_DIR}" --user=${MYSQL_USER}
+    else
+        echo "Invalid MYSQL_FLAVOR"
+        exit 1
+    fi
 fi
 
 chown -R "${MYSQL_USER}:${MYSQL_GROUP}" "${DATA_DIR}"
-exec runuser -p -u "${MYSQL_USER}" -g "${MYSQL_GROUP}" /usr/sbin/mysqld -- \
-    --basedir=/usr \
-    --datadir="${DATA_DIR}"
+if [ "$MYSQL_FLAVOR" = "mariadb" ];then
+    exec runuser -p -u "${MYSQL_USER}" -g "${MYSQL_GROUP}" /usr/sbin/mysqld -- \
+        --basedir=/usr \
+        --datadir="${DATA_DIR}"
+elif [ "$MYSQL_FLAVOR" = "mysql" ];then
+    exec runuser -p -u "${MYSQL_USER}" -g "${MYSQL_GROUP}" /usr/sbin/mysqld -- \
+        --datadir="${DATA_DIR}"
+fi

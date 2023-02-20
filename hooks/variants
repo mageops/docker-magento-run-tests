@@ -1,5 +1,5 @@
 
-set -xeuo pipefail
+set -euo pipefail
 
 DOCKERFILE_PATH="${DOCKERFILE_PATH:-Dockerfile}"
 DOCKER_REPO="${DOCKER_REPO:-mageops/magento-run-tests}"
@@ -23,19 +23,46 @@ if [[ ! -z "$DOCKER_BUILD_CACHE_FROM" ]] ; then
 fi
 
 IMAGE_VARIANTS=(
-    'VARIANT_NAME="php71-es7-mariadb103"  ; PHP_VERSION="71" ; ELASTICSEARCH_VERSION="7.2.0-x86_64"  ; MARIADB_VERSION="10.3"  ; COMPOSER_VERSION=1'
-    'VARIANT_NAME="php72-es7-mariadb103"  ; PHP_VERSION="72" ; ELASTICSEARCH_VERSION="7.2.0-x86_64"  ; MARIADB_VERSION="10.3"  ; COMPOSER_VERSION=1'
-    'VARIANT_NAME="php73-es7-mariadb104"  ; PHP_VERSION="73" ; ELASTICSEARCH_VERSION="7.2.0-x86_64"  ; MARIADB_VERSION="10.4"  ; COMPOSER_VERSION=1'
-    'VARIANT_NAME="php74-es7-mariadb104"  ; PHP_VERSION="74" ; ELASTICSEARCH_VERSION="7.2.0-x86_64"  ; MARIADB_VERSION="10.4"  ; COMPOSER_VERSION=1'
-    'VARIANT_NAME="php80-es7-mariadb104"  ; PHP_VERSION="80" ; ELASTICSEARCH_VERSION="7.17.3-x86_64" ; MARIADB_VERSION="10.4"  ; COMPOSER_VERSION=2'
-    'VARIANT_NAME="php81-es7-mariadb104"  ; PHP_VERSION="81" ; ELASTICSEARCH_VERSION="7.17.3-x86_64" ; MARIADB_VERSION="10.4"  ; COMPOSER_VERSION=2'
-    'VARIANT_NAME="php80-es7-mariadb108"  ; PHP_VERSION="80" ; ELASTICSEARCH_VERSION="7.17.3-x86_64" ; MARIADB_VERSION="10.8"  ; COMPOSER_VERSION=2'
-    'VARIANT_NAME="php81-es7-mariadb108"  ; PHP_VERSION="81" ; ELASTICSEARCH_VERSION="7.17.3-x86_64" ; MARIADB_VERSION="10.8"  ; COMPOSER_VERSION=2'
-    'VARIANT_NAME="php81-es7-mariadb1010" ; PHP_VERSION="81" ; ELASTICSEARCH_VERSION="7.17.3-x86_64" ; MARIADB_VERSION="10.10" ; COMPOSER_VERSION=2'
+    'VARIANT_NAME="php71-es7-mariadb103"  ; PHP_VERSION="7.1" ; ELASTICSEARCH_VERSION="7.2.0-x86_64"  ; MARIADB_VERSION="10.3"  ; COMPOSER_VERSION=1'
+    'VARIANT_NAME="php72-es7-mariadb103"  ; PHP_VERSION="7.2" ; ELASTICSEARCH_VERSION="7.2.0-x86_64"  ; MARIADB_VERSION="10.3"  ; COMPOSER_VERSION=1'
+    'VARIANT_NAME="php73-es7-mariadb104"  ; PHP_VERSION="7.3" ; ELASTICSEARCH_VERSION="7.2.0-x86_64"  ; MARIADB_VERSION="10.4"  ; COMPOSER_VERSION=1'
+    'VARIANT_NAME="php74-es7-mariadb104"  ; PHP_VERSION="7.4" ; ELASTICSEARCH_VERSION="7.2.0-x86_64"  ; MARIADB_VERSION="10.4"  ; COMPOSER_VERSION=1'
+    'VARIANT_NAME="php80-es7-mariadb104"  ; PHP_VERSION="8.0" ; ELASTICSEARCH_VERSION="7.17.3-x86_64" ; MARIADB_VERSION="10.4"  ; COMPOSER_VERSION=2'
+    'VARIANT_NAME="php81-es7-mariadb104"  ; PHP_VERSION="8.1" ; ELASTICSEARCH_VERSION="7.17.3-x86_64" ; MARIADB_VERSION="10.4"  ; COMPOSER_VERSION=2'
+    'VARIANT_NAME="php80-es7-mariadb108"  ; PHP_VERSION="8.0" ; ELASTICSEARCH_VERSION="7.17.3-x86_64" ; MARIADB_VERSION="10.8"  ; COMPOSER_VERSION=2'
+    'VARIANT_NAME="php80-es7-mysql80"     ; PHP_VERSION="8.0" ; ELASTICSEARCH_VERSION="7.17.3-x86_64" ; MYSQL_VERSION="8.0"     ; COMPOSER_VERSION=2  ; MYSQL_FLAVOR=mysql'
+    'VARIANT_NAME="php81-es7-mariadb108"  ; PHP_VERSION="8.1" ; ELASTICSEARCH_VERSION="7.17.3-x86_64" ; MARIADB_VERSION="10.8"  ; COMPOSER_VERSION=2'
+    'VARIANT_NAME="php81-es7-mariadb1010" ; PHP_VERSION="8.1" ; ELASTICSEARCH_VERSION="7.17.3-x86_64" ; MARIADB_VERSION="10.10" ; COMPOSER_VERSION=2'
+    'VARIANT_NAME="php81-es7-mysql80"     ; PHP_VERSION="8.1" ; ELASTICSEARCH_VERSION="7.17.3-x86_64" ; MYSQL_VERSION="8.0"     ; COMPOSER_VERSION=2  ; MYSQL_FLAVOR=mysql'
 )
 
+function generate_table() {
+    echo "| Version | Docker tag | PHP | DB| Elasticsearch | Composer version |"
+    echo "| --- | --- | ---: | ---: | ---: | ---: |"
+    for VARIANT_DATA in "${IMAGE_VARIANTS[@]}" ; do
+        (
+            eval "$VARIANT_DATA";
+            if [ "${MYSQL_FLAVOR:-mariadb}" = "mysql" ];then
+                MYSQL_DESC="Mysql ${MYSQL_VERSION}"
+            else
+                MYSQL_DESC="MariaDB ${MARIADB_VERSION}"
+            fi
+            echo "| **${VARIANT_NAME}** | _${VARIANT_NAME}-stable_ | ${PHP_VERSION}.X | ${MYSQL_DESC} | ${ELASTICSEARCH_VERSION/-x86_64/} | ${COMPOSER_VERSION} |"
+        )
+    done
+}
+
 function docker_build() {
-    docker build . -f "${DOCKERFILE_PATH}" ${DOCKER_BUILD_ARGS} $@
+    # Ulimit nofile=1024 is required as workaround for python programs (eg. yum)
+    # When some python programs close, they try to close all possible fds
+    # When ulimit is high (as in default in modern docker installations)
+    # this causes long hangs
+    docker build \
+        --ulimit nofile=1024 \
+        -f "${DOCKERFILE_PATH}" \
+        ${DOCKER_BUILD_ARGS} \
+        . \
+        $@
 }
 
 function docker_push() {
@@ -66,12 +93,19 @@ function build_main() {
 
 function build_variants() {
     for VARIANT_DATA in "${IMAGE_VARIANTS[@]}" ; do
-        eval "$VARIANT_DATA";
-        build_parametrized "$VARIANT_NAME" \
-            --build-arg PHP_VERSION="$PHP_VERSION" \
-            --build-arg ELASTICSEARCH_VERSION="$ELASTICSEARCH_VERSION" \
-            --build-arg MARIADB_VERSION="$MARIADB_VERSION" \
-            --build-arg COMPOSER_VERSION="$COMPOSER_VERSION"
+        (
+            eval "$VARIANT_DATA";
+            echo -e "\n ==============================\n" \
+                    "   Building $VARIANT_NAME\n" \
+                    "==============================\n\n"
+            build_parametrized "$VARIANT_NAME" \
+                --build-arg PHP_VERSION="${PHP_VERSION//./}" \
+                --build-arg ELASTICSEARCH_VERSION="$ELASTICSEARCH_VERSION" \
+                --build-arg MARIADB_VERSION="${MARIADB_VERSION:-}" \
+                --build-arg MYSQL_VERSION="${MYSQL_VERSION:-}" \
+                --build-arg MYSQL_FLAVOR="${MYSQL_FLAVOR:-mariadb}" \
+                --build-arg COMPOSER_VERSION="$COMPOSER_VERSION"
+        )
     done
 }
 
