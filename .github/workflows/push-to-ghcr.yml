@@ -25,10 +25,8 @@ jobs:
     - name: Build the Docker image
       run: ./hooks/build
       env:
-        IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/magento-run-tests:${{ steps.vars.outputs.tag }}
         DOCKER_REPO: ghcr.io/${{ github.repository_owner }}/magento-run-tests
     - name: Publish the Docker image
       run: ./hooks/push
       env:
-        IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/magento-run-tests:${{ steps.vars.outputs.tag }}
         DOCKER_REPO: ghcr.io/${{ github.repository_owner }}/magento-run-tests
