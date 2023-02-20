@@ -1,7 +1,9 @@
-name: Publish docker container to docker hub
+name: Publish docker container to registry
 
 on:
   push:
+    branches:
+      - master
     tags:
       - v*
   workflow_dispatch:
