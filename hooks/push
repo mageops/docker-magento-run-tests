@@ -5,7 +5,9 @@ set -x
 . hooks/variants
 
 if [ "${GITHUB_REF_TYPE:-}" = "tag" ];then
-    export DOCKER_TAG="${GITHUB_REF_NAME:-latest}"
+    export DOCKER_TAG="stable"
+else
+    export DOCKER_TAG="latest"
 fi
 
 push_main
