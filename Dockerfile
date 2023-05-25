@@ -59,6 +59,10 @@ RUN rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch \
  && /usr/share/elasticsearch/bin/elasticsearch-plugin install analysis-phonetic \
  && /usr/share/elasticsearch/bin/elasticsearch-plugin install analysis-icu \
  && rm -rf /var/tmp/* /usr/share/elasticsearch/modules/x-pack-ml/platform/{darwin,windows}-* \
+ # Remove auto hardcoded master hostname
+ && sed '/cluster\.initial_master_nodes/d' -i /etc/elasticsearch/elasticsearch.yml \
+ # Disable xpack security if enabled
+ && sed -i 's/^xpack.security.enabled: true/xpack.security.enabled: false/' -i /etc/elasticsearch/elasticsearch.yml \
  && yum clean all
 
 ARG MYSQL_FLAVOR="mariadb"
