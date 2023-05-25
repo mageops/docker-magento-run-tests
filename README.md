@@ -45,6 +45,7 @@ See [all tags](https://github.com/mageops/docker-magento-run-tests/pkgs/containe
 | **php81-es7-mariadb108** | _php81-es7-mariadb108-stable_ | 8.1.X | MariaDB 10.8 | 7.17.3 | 2 |
 | **php81-es7-mariadb1010** | _php81-es7-mariadb1010-stable_ | 8.1.X | MariaDB 10.10 | 7.17.3 | 2 |
 | **php81-es7-mysql80** | _php81-es7-mysql80-stable_ | 8.1.X | Mysql 8.0 | 7.17.3 | 2 |
+| **php82-es84-mysql80** | _php82-es84-mysql80-stable_ | 8.2.X | Mysql 8.0 | 8.4.3 | 2 |
 
 _Note: The `exec` mount opt on `/tmp` is needed for elasticsearch because it maps mem to temp files._
 _The image is big and there's not really a way around it since it has a lot of software and is based on CentOS (which we use for local dev / production deployments, so we want to keep everything else close)._
