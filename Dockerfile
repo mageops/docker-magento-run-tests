@@ -118,6 +118,8 @@ RUN rpm --import https://rpms.remirepo.net/RPM-GPG-KEY-remi \
 ENV COMPOSER_HOME="/opt/composer"
 ARG COMPOSER_VERSION="1"
 ENV COMPOSER_VERSION="${COMPOSER_VERSION}"
+ARG PHING_VERSION="2"
+ENV PHING_VERSION="${PHING_VERSION}"
 
 RUN mkdir /opt/composer \
   && curl getcomposer.org/installer -o /tmp/composer-setup \
@@ -126,7 +128,7 @@ RUN mkdir /opt/composer \
   && php /tmp/composer-setup "--${COMPOSER_VERSION}" --install-dir=/usr/bin --filename=composer \
   && rm /tmp/composer-setup \
   && composer global config bin-dir /usr/bin \
-  && composer global require phing/phing \
+  && composer global require phing/phing "^${PHING_VERSION}" \
   && if [ "$COMPOSER_VERSION" = "1" ];then composer global require hirak/prestissimo; fi \
   && curl -L https://github.com/nicolas-van/multirun/releases/download/0.3.2/multirun-glibc-0.3.2.tar.gz | tar -xz -C /sbin \
   && chmod +x /sbin/multirun \

@@ -23,15 +23,15 @@ if [[ ! -z "$DOCKER_BUILD_CACHE_FROM" ]] ; then
 fi
 
 IMAGE_VARIANTS=(
-    'VARIANT_NAME="rl9-php80-es7-mysql80"     ; PHP_VERSION="8.0" ; ELASTICSEARCH_VERSION="7.17.3-x86_64" ; MYSQL_VERSION="8.0"     ; COMPOSER_VERSION=2  ; MYSQL_FLAVOR=mysql'
-    'VARIANT_NAME="rl9-php81-es7-mysql80"     ; PHP_VERSION="8.1" ; ELASTICSEARCH_VERSION="7.17.3-x86_64" ; MYSQL_VERSION="8.0"     ; COMPOSER_VERSION=2  ; MYSQL_FLAVOR=mysql'
-    'VARIANT_NAME="rl9-php82-es84-mysql80"     ; PHP_VERSION="8.2" ; ELASTICSEARCH_VERSION="8.4.3-x86_64" ; MYSQL_VERSION="8.0"     ; COMPOSER_VERSION=2  ; MYSQL_FLAVOR=mysql'
-    'VARIANT_NAME="rl9-php83-es811-mysql80"     ; PHP_VERSION="8.3" ; ELASTICSEARCH_VERSION="8.11.4-x86_64" ; MYSQL_VERSION="8.0"     ; COMPOSER_VERSION=2  ; MYSQL_FLAVOR=mysql'
+    'VARIANT_NAME="rl9-php80-es7-mysql80-phing2"     ; PHP_VERSION="8.0" ; ELASTICSEARCH_VERSION="7.17.3-x86_64" ; MYSQL_VERSION="8.0"     ; COMPOSER_VERSION=2  ; MYSQL_FLAVOR=mysql ; PHING_VERSION=2'
+    'VARIANT_NAME="rl9-php81-es7-mysql80-phing2"     ; PHP_VERSION="8.1" ; ELASTICSEARCH_VERSION="7.17.3-x86_64" ; MYSQL_VERSION="8.0"     ; COMPOSER_VERSION=2  ; MYSQL_FLAVOR=mysql ; PHING_VERSION=2'
+    'VARIANT_NAME="rl9-php82-es84-mysql80-phing2"    ; PHP_VERSION="8.2" ; ELASTICSEARCH_VERSION="8.4.3-x86_64"  ; MYSQL_VERSION="8.0"     ; COMPOSER_VERSION=2  ; MYSQL_FLAVOR=mysql ; PHING_VERSION=2'
+    'VARIANT_NAME="rl9-php83-es811-mysql80-phing2"   ; PHP_VERSION="8.3" ; ELASTICSEARCH_VERSION="8.11.4-x86_64" ; MYSQL_VERSION="8.0"     ; COMPOSER_VERSION=2  ; MYSQL_FLAVOR=mysql ; PHING_VERSION=2'
 )
 
 function generate_table() {
-    echo "| Version | Docker tag | PHP | DB| Elasticsearch | Composer version |"
-    echo "| --- | --- | ---: | ---: | ---: | ---: |"
+    echo "| Version | Docker tag | PHP | DB| Elasticsearch | Composer version | Phing version |"
+    echo "| --- | --- | ---: | ---: | ---: | ---: | ---: |"
     for VARIANT_DATA in "${IMAGE_VARIANTS[@]}" ; do
         (
             eval "$VARIANT_DATA";
@@ -40,7 +40,7 @@ function generate_table() {
             else
                 MYSQL_DESC="MariaDB ${MARIADB_VERSION}"
             fi
-            echo "| **${VARIANT_NAME}** | _${VARIANT_NAME}-stable_ | ${PHP_VERSION}.X | ${MYSQL_DESC} | ${ELASTICSEARCH_VERSION/-x86_64/} | ${COMPOSER_VERSION} |"
+            echo "| **${VARIANT_NAME}** | _${VARIANT_NAME}-stable_ | ${PHP_VERSION}.X | ${MYSQL_DESC} | ${ELASTICSEARCH_VERSION/-x86_64/} | ${COMPOSER_VERSION} | ${PHING_VERSION} |"
         )
     done
 }
@@ -97,7 +97,8 @@ function build_variants() {
                 --build-arg MARIADB_VERSION="${MARIADB_VERSION:-}" \
                 --build-arg MYSQL_VERSION="${MYSQL_VERSION:-}" \
                 --build-arg MYSQL_FLAVOR="${MYSQL_FLAVOR:-mariadb}" \
-                --build-arg COMPOSER_VERSION="$COMPOSER_VERSION"
+                --build-arg COMPOSER_VERSION="$COMPOSER_VERSION" \
+                --build-arg PHING_VERSION="$PHING_VERSION" \
         )
     done
 }
