@@ -1,16 +1,17 @@
-FROM centos:centos7
+FROM rockylinux:9
 
 # Install as much as we can of the base packages at first step to speed up the build
 # Remove language override, may be required for some tests
 # glibc-common is reinstalled to restore some missing locales
-RUN sed -i 's/^\(override_install_langs.*\)$/#\1/' /etc/yum.conf \
+RUN sed -i 's/^\(override_install_langs.*\)$/#\1/' /etc/dnf/dnf.conf \
+  && echo "fastestmirror=True" >> /etc/dnf/dnf.conf \
+  && echo "max_parallel_downloads=20" >> /etc/dnf/dnf.conf \
   && ln -svf /usr/share/zoneinfo/UTC /etc/localtime \
-  && yum -y upgrade \
-  && yum -y install epel-release \
-  && yum -y reinstall glibc-common \
-  && yum -y install \
-           yum-utils \
-           curl \
+  && dnf -y upgrade \
+  && dnf -y install epel-release \
+  && dnf -y reinstall glibc-common \
+  && dnf -y install \
+           dnf-utils \
            wget \
            unzip \
            git \
@@ -39,7 +40,7 @@ RUN sed -i 's/^\(override_install_langs.*\)$/#\1/' /etc/yum.conf \
            gcc-c++ \
            fontconfig \
            libmcrypt \
-           libzip5 \
+           libzip \
            fribidi \
            graphviz \
            pngquant \
@@ -47,14 +48,14 @@ RUN sed -i 's/^\(override_install_langs.*\)$/#\1/' /etc/yum.conf \
            optipng \
            gifsicle \
            jpegoptim \
-  && yum clean all
+  && dnf clean all
 
 ARG ELASTICSEARCH_VERSION="7.17.3-x86_64"
 ENV ELASTICSEARCH_VERSION="${ELASTICSEARCH_VERSION}" \
     ES_JAVA_OPTS="-Xms128m -Xmx128m"
 
 RUN rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch \
- && yum -y install \
+ && dnf -y install \
            "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-${ELASTICSEARCH_VERSION}.rpm" \
  && /usr/share/elasticsearch/bin/elasticsearch-plugin install analysis-phonetic \
  && /usr/share/elasticsearch/bin/elasticsearch-plugin install analysis-icu \
@@ -63,7 +64,7 @@ RUN rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch \
  && sed '/cluster\.initial_master_nodes/d' -i /etc/elasticsearch/elasticsearch.yml \
  # Disable xpack security if enabled
  && sed -i 's/^xpack.security.enabled: true/xpack.security.enabled: false/' -i /etc/elasticsearch/elasticsearch.yml \
- && yum clean all
+ && dnf clean all
 
 ARG MYSQL_FLAVOR="mariadb"
 ENV MYSQL_FLAVOR="${MYSQL_FLAVOR}"
@@ -76,42 +77,43 @@ ENV MYSQL_VERSION="${MYSQL_VERSION}"
 
 RUN set -exuo pipefail ; \
   if [ "$MYSQL_FLAVOR" = "mariadb" ];then \
-    rpm --import https://yum.mariadb.org/RPM-GPG-KEY-MariaDB \
-    && echo -e "[mariadb]\nname = MariaDB\nbaseurl = http://yum.mariadb.org/${MARIADB_VERSION}/centos7-amd64\ngpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB\ngpgcheck=1\nenabled=1" > /etc/yum.repos.d/MariaDB.repo \
-    && yum -y install MariaDB-server MariaDB-client \
+    rpm --import https://dnf.mariadb.org/RPM-GPG-KEY-MariaDB \
+    && echo -e "[mariadb]\nname = MariaDB\nbaseurl = http://dnf.mariadb.org/${MARIADB_VERSION}/rocky9-amd64\ngpgkey=https://dnf.mariadb.org/RPM-GPG-KEY-MariaDB\ngpgcheck=1\nenabled=1" > /etc/dnf.repos.d/MariaDB.repo \
+    && dnf -y install MariaDB-server MariaDB-client \
     && rm -rf /var/lib/mysql; \
   elif [ "$MYSQL_FLAVOR" = "mysql" ];then \
     if [ "$MYSQL_VERSION" = "8.0" ];then \
-      MYSQL_FILENAME=mysql80-community-release-el7-11.noarch.rpm; \
-      MYSQL_MD5=42048ccae58835e40e37b68a3f8b91fb; \
+      MYSQL_FILENAME=mysql80-community-release-el9-5.noarch.rpm; \
+      MYSQL_MD5=4fa11545b76db63df0efe852e28c4d6b; \
     else \
       echo "Uknown mysql version"; \
       exit 1; \
     fi; \
     curl -sLf "https://dev.mysql.com/get/$MYSQL_FILENAME" -o "$MYSQL_FILENAME" \
     && echo "$MYSQL_MD5  $MYSQL_FILENAME" md5sum -c \
-    && yum install -y "$MYSQL_FILENAME" \
+    && dnf install -y "$MYSQL_FILENAME" \
     && rm "$MYSQL_FILENAME" \
-    && yum install -y mysql-server; \
+    && dnf install -y mysql-server; \
   else \
     echo "Unknown MYSQL_FLAVOR=${MYSQL_FLAVOR}"; \
     exit 1; \
   fi; \
-  yum clean all
+  dnf clean all
 
-ARG PHP_VERSION="74"
+ARG PHP_VERSION="7.4"
 ENV PHP_VERSION="${PHP_VERSION}"
 
 RUN rpm --import https://rpms.remirepo.net/RPM-GPG-KEY-remi \
- && yum -y install https://rpms.remirepo.net/enterprise/remi-release-7.rpm \
- && yum-config-manager --enable "remi-php${PHP_VERSION}" \
- && yum -y install \
+ && dnf -y install https://rpms.remirepo.net/enterprise/remi-release-9.rpm \
+ && dnf -y module enable "php:remi-${PHP_VERSION}" \
+ && dnf -y install \
             php php-gd php-pdo php-sodium php-json php-mysqlnd \
             php-soap php-xmlrpc php-xml php-intl php-mcrypt \
             php-mysql php-mbstring php-zip php-bcmath \
             php-opcache php-imagick php-curl php-gmp \
-            php-pecl-apcu-bc php-pecl-redis php-pecl-zip \
-  && yum clean all
+            php-pecl-redis php-pecl-zip \
+  && if [ "$PHP_VERSION" = "7.4" ];then dnf -y install php74-php-pecl-apcu-bc; fi \
+  && dnf clean all
 
 ENV COMPOSER_HOME="/opt/composer"
 ARG COMPOSER_VERSION="1"

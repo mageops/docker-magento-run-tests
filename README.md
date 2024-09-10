@@ -31,15 +31,14 @@ See [all tags](https://github.com/mageops/docker-magento-run-tests/pkgs/containe
 - `stable` - latest tag named `vX.Y`
 
 ## Notable versions
-| Version | Docker tag | PHP | DB| Elasticsearch | Composer version |
 | --- | --- | ---: | ---: | ---: | ---: |
-| **php80-es7-mysql80** | _php80-es7-mysql80-stable_ | 8.0.X | Mysql 8.0 | 7.17.3 | 2 |
-| **php81-es7-mysql80** | _php81-es7-mysql80-stable_ | 8.1.X | Mysql 8.0 | 7.17.3 | 2 |
-| **php82-es84-mysql80** | _php82-es84-mysql80-stable_ | 8.2.X | Mysql 8.0 | 8.4.3 | 2 |
-| **php83-es811-mysql80** | _php83-es811-mysql80-stable_ | 8.3.X | Mysql 8.0 | 8.11.4 | 2 |
+| **rl9-php80-es7-mysql80** | _rl9-php80-es7-mysql80-stable_ | 8.0.X | Mysql 8.0 | 7.17.3 | 2 |
+| **rl9-php81-es7-mysql80** | _rl9-php81-es7-mysql80-stable_ | 8.1.X | Mysql 8.0 | 7.17.3 | 2 |
+| **rl9-php82-es84-mysql80** | _rl9-php82-es84-mysql80-stable_ | 8.2.X | Mysql 8.0 | 8.4.3 | 2 |
+| **rl9-php83-es811-mysql80** | _rl9-php83-es811-mysql80-stable_ | 8.3.X | Mysql 8.0 | 8.11.4 | 2 |
 
 _Note: The `exec` mount opt on `/tmp` is needed for elasticsearch because it maps mem to temp files._
-_The image is big and there's not really a way around it since it has a lot of software and is based on CentOS (which we use for local dev / production deployments, so we want to keep everything else close)._
+_The image is big and there's not really a way around it since it has a lot of software and is based on RockyLinux (which we use for local dev / production deployments, so we want to keep everything else close)._
 
 ## Basic usage
 

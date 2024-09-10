@@ -10,5 +10,5 @@ else
     export DOCKER_TAG="latest"
 fi
 
-push_main
+# push_main
 push_variants

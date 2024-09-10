@@ -4,5 +4,5 @@ set -x
 
 . hooks/variants
 
-build_main
+# build_main
 build_variants

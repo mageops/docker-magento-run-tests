@@ -23,10 +23,10 @@ if [[ ! -z "$DOCKER_BUILD_CACHE_FROM" ]] ; then
 fi
 
 IMAGE_VARIANTS=(
-    'VARIANT_NAME="php80-es7-mysql80"     ; PHP_VERSION="8.0" ; ELASTICSEARCH_VERSION="7.17.3-x86_64" ; MYSQL_VERSION="8.0"     ; COMPOSER_VERSION=2  ; MYSQL_FLAVOR=mysql'
-    'VARIANT_NAME="php81-es7-mysql80"     ; PHP_VERSION="8.1" ; ELASTICSEARCH_VERSION="7.17.3-x86_64" ; MYSQL_VERSION="8.0"     ; COMPOSER_VERSION=2  ; MYSQL_FLAVOR=mysql'
-    'VARIANT_NAME="php82-es84-mysql80"     ; PHP_VERSION="8.2" ; ELASTICSEARCH_VERSION="8.4.3-x86_64" ; MYSQL_VERSION="8.0"     ; COMPOSER_VERSION=2  ; MYSQL_FLAVOR=mysql'
-    'VARIANT_NAME="php83-es811-mysql80"     ; PHP_VERSION="8.3" ; ELASTICSEARCH_VERSION="8.11.4-x86_64" ; MYSQL_VERSION="8.0"     ; COMPOSER_VERSION=2  ; MYSQL_FLAVOR=mysql'
+    'VARIANT_NAME="rl9-php80-es7-mysql80"     ; PHP_VERSION="8.0" ; ELASTICSEARCH_VERSION="7.17.3-x86_64" ; MYSQL_VERSION="8.0"     ; COMPOSER_VERSION=2  ; MYSQL_FLAVOR=mysql'
+    'VARIANT_NAME="rl9-php81-es7-mysql80"     ; PHP_VERSION="8.1" ; ELASTICSEARCH_VERSION="7.17.3-x86_64" ; MYSQL_VERSION="8.0"     ; COMPOSER_VERSION=2  ; MYSQL_FLAVOR=mysql'
+    'VARIANT_NAME="rl9-php82-es84-mysql80"     ; PHP_VERSION="8.2" ; ELASTICSEARCH_VERSION="8.4.3-x86_64" ; MYSQL_VERSION="8.0"     ; COMPOSER_VERSION=2  ; MYSQL_FLAVOR=mysql'
+    'VARIANT_NAME="rl9-php83-es811-mysql80"     ; PHP_VERSION="8.3" ; ELASTICSEARCH_VERSION="8.11.4-x86_64" ; MYSQL_VERSION="8.0"     ; COMPOSER_VERSION=2  ; MYSQL_FLAVOR=mysql'
 )
 
 function generate_table() {
@@ -92,7 +92,7 @@ function build_variants() {
                     "   Building $VARIANT_NAME\n" \
                     "==============================\n\n"
             build_parametrized "$VARIANT_NAME" \
-                --build-arg PHP_VERSION="${PHP_VERSION//./}" \
+                --build-arg PHP_VERSION="${PHP_VERSION}" \
                 --build-arg ELASTICSEARCH_VERSION="$ELASTICSEARCH_VERSION" \
                 --build-arg MARIADB_VERSION="${MARIADB_VERSION:-}" \
                 --build-arg MYSQL_VERSION="${MYSQL_VERSION:-}" \
