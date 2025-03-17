@@ -93,7 +93,7 @@ RUN set -exuo pipefail ; \
     && echo "$MYSQL_MD5  $MYSQL_FILENAME" md5sum -c \
     && dnf install -y "$MYSQL_FILENAME" \
     && rm "$MYSQL_FILENAME" \
-    && dnf install -y mysql-server; \
+    && dnf install -y mysql-community-server; \
   else \
     echo "Unknown MYSQL_FLAVOR=${MYSQL_FLAVOR}"; \
     exit 1; \
