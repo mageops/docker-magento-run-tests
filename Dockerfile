@@ -85,7 +85,10 @@ RUN set -exuo pipefail ; \
     if [ "$MYSQL_VERSION" = "8.0" ];then \
       MYSQL_FILENAME=mysql80-community-release-el9-5.noarch.rpm; \
       MYSQL_MD5=4fa11545b76db63df0efe852e28c4d6b; \
-    else \
+  elif [ "$MYSQL_VERSION" = "8.4" ];then \  
+      MYSQL_FILENAME=mysql84-community-release-el9-1.noarch.rpm; \
+      MYSQL_MD5=15a20fea9018662224f354cb78b392e7; \
+  else
       echo "Uknown mysql version"; \
       exit 1; \
     fi; \
