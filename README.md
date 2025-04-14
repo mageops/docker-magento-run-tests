@@ -37,6 +37,7 @@ See [all tags](https://github.com/mageops/docker-magento-run-tests/pkgs/containe
 | **rl9-php81-es7-mysql80-phing2** | _rl9-php81-es7-mysql80-phing2-stable_ | 8.1.X | Mysql 8.0 | 7.17.3 | 2 | 2 |
 | **rl9-php82-es84-mysql80-phing2** | _rl9-php82-es84-mysql80-phing2-stable_ | 8.2.X | Mysql 8.0 | 8.4.3 | 2 | 2 |
 | **rl9-php83-es811-mysql80-phing2** | _rl9-php83-es811-mysql80-phing2-stable_ | 8.3.X | Mysql 8.0 | 8.11.4 | 2 | 2 |
+| **rl9-php83-es817-mysql84-phing2** | _rl9-php83-es817-mysql84-phing2-stable_ | 8.3.X | Mysql 8.4 | 8.17.4 | 2 | 2 |
 | **rl9-php84-es817-mysql84-phing2** | _rl9-php84-es817-mysql84-phing2-stable_ | 8.4.X | Mysql 8.4 | 8.17.4 | 2 | 2 |
 
 _Note: The `exec` mount opt on `/tmp` is needed for elasticsearch because it maps mem to temp files._
