@@ -63,7 +63,6 @@ ENDSQL
 
 function clean() {
     rm -rf \
-        /var/www/html/generated/* \
         /var/www/html/var/* \
         /var/www/html/dev/tests/integration/tmp/*
 }
