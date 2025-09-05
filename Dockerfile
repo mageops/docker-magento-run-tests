@@ -85,7 +85,7 @@ RUN set -exuo pipefail ; \
     if [ "$MYSQL_VERSION" = "8.0" ];then \
       MYSQL_FILENAME=mysql80-community-release-el9-5.noarch.rpm; \
       MYSQL_MD5=4fa11545b76db63df0efe852e28c4d6b; \
-    elif [ "$MYSQL_VERSION" = "8.4" ];then \  
+    elif [ "$MYSQL_VERSION" = "8.4" ];then \
       MYSQL_FILENAME=mysql84-community-release-el9-1.noarch.rpm; \
       MYSQL_MD5=15a20fea9018662224f354cb78b392e7; \
     else \
@@ -103,6 +103,10 @@ RUN set -exuo pipefail ; \
   fi; \
   dnf clean all
 
+RUN if [ "$MYSQL_VERSION" = "8.4" ]; then \
+      echo -e "[mysqld]\nrestrict_fk_on_non_standard_key = OFF" >> /etc/my.cnf; \
+    fi
+
 ARG PHP_VERSION="7.4"
 ENV PHP_VERSION="${PHP_VERSION}"
 
@@ -119,7 +123,7 @@ RUN rpm --import https://rpms.remirepo.net/RPM-GPG-KEY-remi \
   && dnf clean all
 
 ENV COMPOSER_HOME="/opt/composer"
-ARG COMPOSER_VERSION="1"
+ARG COMPOSER_VERSION="2"
 ENV COMPOSER_VERSION="${COMPOSER_VERSION}"
 ARG PHING_VERSION="2"
 ENV PHING_VERSION="${PHING_VERSION}"
