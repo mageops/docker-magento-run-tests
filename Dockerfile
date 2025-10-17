@@ -118,7 +118,7 @@ RUN rpm --import https://rpms.remirepo.net/RPM-GPG-KEY-remi \
             php-soap php-xmlrpc php-xml php-intl php-mcrypt \
             php-mysql php-mbstring php-zip php-bcmath \
             php-opcache php-imagick php-curl php-gmp \
-            php-pecl-redis php-pecl-zip \
+            php-pecl-redis php-pecl-zip php-process \
   && if [ "$PHP_VERSION" = "7.4" ];then dnf -y install php74-php-pecl-apcu-bc; fi \
   && dnf clean all
 
