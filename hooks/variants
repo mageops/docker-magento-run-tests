@@ -116,6 +116,7 @@ function push_variants() {
         eval "$VARIANT_DATA";
         docker_push "$(variant_image_name ${VARIANT_NAME})"
         # Tag also stable if this is tagged build
+        echo $DOCKER_TAG
         if [ "$DOCKER_TAG" != "latest" ];then
             docker tag "$(variant_image_name ${VARIANT_NAME})" "$(variant_image_name_stable ${VARIANT_NAME})"
             docker_push "$(variant_image_name_stable ${VARIANT_NAME})"
