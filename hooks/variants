@@ -47,6 +47,10 @@ function generate_table() {
     done
 }
 
+function docker_push() {
+    docker push $@
+}
+
 function docker_build() {
     # Ulimit nofile=1024 is required as workaround for python programs (eg. yum)
     # When some python programs close, they try to close all possible fds
