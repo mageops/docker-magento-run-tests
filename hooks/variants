@@ -3,9 +3,7 @@ set -euo pipefail
 
 DOCKERFILE_PATH="${DOCKERFILE_PATH:-Dockerfile}"
 DOCKER_REPO="${DOCKER_REPO:-mageops/magento-run-tests}"
-DOCKER_REPO_LEGACY="${DOCKER_REPO_LEGACY:-magesuite/run-tests}"
 DOCKER_TAG="${DOCKER_TAG:-latest}"
-IMAGE_NAME="${IMAGE_NAME:-${DOCKER_REPO}:${DOCKER_TAG}}"
 
 SOURCE_COMMIT="${SOURCE_COMMIT:-$(git rev-parse --short HEAD)}"
 SOURCE_BRANCH="${SOURCE_BRANCH:-$(git rev-parse --abbrev-ref HEAD)}"
@@ -62,16 +60,12 @@ function docker_build() {
         $@
 }
 
-function docker_push() {
-    docker push $@
-}
-
 function variant_image_name() {
-    echo "${DOCKER_REPO}:${@}-${DOCKER_TAG}"
+    echo "${DOCKER_REPO}:${@}-latest"
 }
 
-function variant_image_name_legacy() {
-    echo "${DOCKER_REPO_LEGACY}:${@}-${DOCKER_TAG}"
+function variant_image_name_tag() {
+    echo "${DOCKER_REPO}:${@}-${DOCKER_TAG}"
 }
 
 function variant_image_name_stable() {
@@ -82,10 +76,6 @@ function build_parametrized() {
     VARIANT_NAME="$1"; shift
 
     docker_build -t "$(variant_image_name ${VARIANT_NAME})" $@
-}
-
-function build_main() {
-    docker_build -t "$IMAGE_NAME"
 }
 
 function build_variants() {
@@ -107,21 +97,22 @@ function build_variants() {
     done
 }
 
-function push_main() {
-    docker_push "$IMAGE_NAME"
-}
-
 function push_variants() {
     for VARIANT_DATA in "${IMAGE_VARIANTS[@]}" ; do
         eval "$VARIANT_DATA";
-        docker_push "$(variant_image_name ${VARIANT_NAME})"
+        DOCKER_LATEST_VARIANT_NAME="$(variant_image_name ${VARIANT_NAME})"
+        docker_push "$DOCKER_LATEST_VARIANT_NAME"
         # Tag also stable if this is tagged build
-        echo "DOCKER TAG : $DOCKER_TAG"
         if [ "$DOCKER_TAG" != "latest" ];then
-            docker tag "$(variant_image_name ${VARIANT_NAME})" "$(variant_image_name_stable ${VARIANT_NAME})"
-            docker_push "$(variant_image_name_stable ${VARIANT_NAME})"
+            # Push stable tag
+            DOCKER_STABLE_VARIANT_NAME="$(variant_image_name_stable ${VARIANT_NAME})"
+            docker tag "$DOCKER_LATEST_VARIANT_NAME" "$DOCKER_STABLE_VARIANT_NAME"
+            docker_push "$DOCKER_STABLE_VARIANT_NAME"
+            
+            # Push versioned tag
+            DOCKER_TAGGED_VARIANT_NAME="$(variant_image_name_tag ${VARIANT_NAME})"
+            docker tag "$DOCKER_LATEST_VARIANT_NAME" "$DOCKER_TAGGED_VARIANT_NAME
+            docker_push "$DOCKER_TAGGED_VARIANT_NAME
         fi
-        # docker tag "$(variant_image_name ${VARIANT_NAME})" "$(variant_image_name_legacy ${VARIANT_NAME})"
-        # docker_push "$(variant_image_name_legacy ${VARIANT_NAME})" || echo "Failed to push legacy image, ignoring"
     done
 }
