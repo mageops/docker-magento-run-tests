@@ -70,13 +70,13 @@ function clean() {
 function run_unit() {
     echo "Starting unit tests..."
     clean
-    phing tests:unit -Denvname=${ENVNAME} -Dtestsuite=${TESTSUITE}
+    phing tests:unit -Denvname=${ENVNAME}
 }
 
 function run_integration() {
     echo "Starting integration tests..."
     clean
-    phing tests:integration -Denvname=${ENVNAME} -Dtestsuite=${TESTSUITE}
+    phing tests:integration -Denvname=${ENVNAME}
 }
 
 bootstrap "$@"
