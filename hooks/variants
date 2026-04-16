@@ -115,8 +115,8 @@ function push_variants() {
             
             # Push versioned tag
             DOCKER_TAGGED_VARIANT_NAME="$(variant_image_name_tag ${VARIANT_NAME})"
-            docker tag "$DOCKER_LATEST_VARIANT_NAME" "$DOCKER_TAGGED_VARIANT_NAME
-            docker_push "$DOCKER_TAGGED_VARIANT_NAME
+            docker tag "$DOCKER_LATEST_VARIANT_NAME" "$DOCKER_TAGGED_VARIANT_NAME"
+            docker_push "$DOCKER_TAGGED_VARIANT_NAME"
         fi
     done
 }
