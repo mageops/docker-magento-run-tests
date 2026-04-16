@@ -2,9 +2,9 @@ name: Build docker image
 
 on:
   push:
-    branches: [ master ]
+    branches: [ split-integration ]
   pull_request:
-    branches: [ master ]
+    branches: [ split-integration ]
   
 
 jobs:
