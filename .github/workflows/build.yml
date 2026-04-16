@@ -2,10 +2,10 @@ name: Build docker image
 
 on:
   push:
-    branches: [ split-integration ]
+    branches: [ split-integrations ]
   pull_request:
     branches: [ split-integration ]
-  
+
 
 jobs:
   build:
