@@ -28,7 +28,7 @@ IMAGE_VARIANTS=(
     'VARIANT_NAME="rl9-php83-es817-mysql84-phing2"   ; PHP_VERSION="8.3" ; ELASTICSEARCH_VERSION="8.17.4-x86_64" ; MYSQL_VERSION="8.4"     ; COMPOSER_VERSION=2  ; MYSQL_FLAVOR=mysql ; PHING_VERSION=2'
     'VARIANT_NAME="rl9-php84-es817-mysql84-phing2"   ; PHP_VERSION="8.4" ; ELASTICSEARCH_VERSION="8.17.4-x86_64" ; MYSQL_VERSION="8.4"     ; COMPOSER_VERSION=2  ; MYSQL_FLAVOR=mysql ; PHING_VERSION=2'
     'VARIANT_NAME="rl9-php83-es817-mysql84-phing3"   ; PHP_VERSION="8.3" ; ELASTICSEARCH_VERSION="8.17.4-x86_64" ; MYSQL_VERSION="8.4"     ; COMPOSER_VERSION=2  ; MYSQL_FLAVOR=mysql ; PHING_VERSION=3'
-    'VARIANT_NAME="rl9-php84-es817-mysql84-phing3"   ; PHP_VERSION="8.4" ; ELASTICSEARCH_VERSION="8.17.4-x86_64" ; MYSQL_VERSION="8.4"     ; COMPOSER_VERSION=2  ; MYSQL_FLAVOR=mysql ; PHING_VERSION=3'
+    'VARIANT_NAME="rl9-php85-es817-mysql84-phing3"   ; PHP_VERSION="8.5" ; ELASTICSEARCH_VERSION="8.17.4-x86_64" ; MYSQL_VERSION="8.4"     ; COMPOSER_VERSION=2  ; MYSQL_FLAVOR=mysql ; PHING_VERSION=3'
 )
 
 function generate_table() {
@@ -112,7 +112,7 @@ function push_variants() {
             DOCKER_STABLE_VARIANT_NAME="$(variant_image_name_stable ${VARIANT_NAME})"
             docker tag "$DOCKER_LATEST_VARIANT_NAME" "$DOCKER_STABLE_VARIANT_NAME"
             docker_push "$DOCKER_STABLE_VARIANT_NAME"
-            
+
             # Push versioned tag
             DOCKER_TAGGED_VARIANT_NAME="$(variant_image_name_tag ${VARIANT_NAME})"
             docker tag "$DOCKER_LATEST_VARIANT_NAME" "$DOCKER_TAGGED_VARIANT_NAME
