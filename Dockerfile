@@ -93,7 +93,7 @@ RUN set -exuo pipefail ; \
       exit 1; \
     fi; \
     curl -sLf "https://dev.mysql.com/get/$MYSQL_FILENAME" -o "$MYSQL_FILENAME" \
-    && echo "$MYSQL_MD5  $MYSQL_FILENAME" md5sum -c \
+    && echo "$MYSQL_MD5  $MYSQL_FILENAME" | md5sum -c \
     && dnf install -y "$MYSQL_FILENAME" \
     && rm "$MYSQL_FILENAME" \
     && dnf install -y mysql-community-server; \
@@ -148,6 +148,10 @@ COPY /rootfs /
 RUN chmod 440 /etc/sudoers \
  && mkdir -p /var/www/html/{generated,var,dev/tests/integration/tmp} \
  && chmod 777 /var/www/html/{generated,var,dev/tests/integration/tmp} /tmp
+
+RUN echo -e "[mysqld]\ninnodb_flush_log_at_trx_commit = 2\nsync_binlog = 0\nperformance_schema = OFF\ninnodb_doublewrite = OFF" >> /etc/my.cnf \
+ && if [ "$MYSQL_FLAVOR" = "mysql" ]; then echo "disable_log_bin" >> /etc/my.cnf; fi \
+ && echo -e "discovery.type: single-node\nxpack.ml.enabled: false\ningest.geoip.downloader.enabled: false\ncluster.routing.allocation.disk.threshold_enabled: false" >> /etc/elasticsearch/elasticsearch.yml
 
 ENV DB_USER="magento2" \
     DB_PASS="magento2" \
